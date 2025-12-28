@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil - Learnia{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-primary text-white rounded p-5 mb-4">
+    <h1 class="display-4">Bienvenue sur Learnia</h1>
+    <p class="lead">Plateforme éducative complète pour les élèves togolais du primaire à la terminale</p>
+    {% if not user.is_authenticated %}
+    <a class="btn btn-light btn-lg mt-3" href="{% url 'accounts:register' %}">
+        <i class="bi bi-person-plus"></i> Commencer maintenant
+    </a>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-robot text-primary"></i> Tuteur Intelligent</h5>
+                <p class="card-text">Pose tes questions sur tes cours et reçois des explications simples adaptées à ton niveau.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'tutor:index' %}" class="btn btn-primary">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-question-circle text-success"></i> Générateur de QCM</h5>
+                <p class="card-text">Génère automatiquement des questions à partir de tes cours pour t'entraîner.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'qcm:index' %}" class="btn btn-success">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-card-text text-warning"></i> Flashcards</h5>
+                <p class="card-text">Mémorise efficacement avec le système Leitner adaptatif.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'flashcards:index' %}" class="btn btn-warning">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-file-text text-info"></i> Résumé Automatique</h5>
+                <p class="card-text">Génère automatiquement des résumés de tes leçons avec les points clés.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'resume:index' %}" class="btn btn-info">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-translate text-danger"></i> Traduction</h5>
+                <p class="card-text">Traduis en éwé et kabiyè pour mieux comprendre tes cours.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'translation:index' %}" class="btn btn-danger">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-calendar-check text-secondary"></i> Planificateur</h5>
+                <p class="card-text">Organise tes révisions et prépare-toi pour tes examens.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'planner:index' %}" class="btn btn-secondary">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-graph-up text-dark"></i> Analyses</h5>
+                <p class="card-text">Suis ta progression avec des graphiques et statistiques détaillées.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'analytics:index' %}" class="btn btn-dark">Voir</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-camera text-primary"></i> OCR Devoirs</h5>
+                <p class="card-text">Photographie tes devoirs manuscrits pour reconnaissance et correction.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'ocr:index' %}" class="btn btn-primary">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-compass text-success"></i> Orientation</h5>
+                <p class="card-text">Découvre les filières et métiers qui te correspondent.</p>
+                {% if user.is_authenticated %}
+                <a href="{% url 'orientation:index' %}" class="btn btn-success">Essayer</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
