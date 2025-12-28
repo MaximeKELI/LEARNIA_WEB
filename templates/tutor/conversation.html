@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Conversation - {{ conversation.titre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-chat-dots"></i> {{ conversation.titre }}</h5>
+            </div>
+            <div class="card-body" id="messages-container" style="height: 500px; overflow-y: auto;">
+                {% for message in messages %}
+                <div class="mb-3 {% if message.role == 'user' %}text-end{% endif %}">
+                    <div class="alert {% if message.role == 'user' %}alert-primary{% else %}alert-light{% endif %}" style="display: inline-block; max-width: 70%;">
+                        {{ message.contenu|linebreaks }}
+                        <small class="d-block mt-2 text-muted">{{ message.created_at|date:"H:i" }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="card-footer">
+                <form id="message-form" method="post" action="{% url 'tutor:send_message' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="conversation_id" value="{{ conversation.id }}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="message" id="message-input" placeholder="Posez votre question..." required>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i> Envoyer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('message-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const message = document.getElementById('message-input').value;
+    const conversationId = {{ conversation.id }};
+    
+    fetch('{% url "tutor:send_message" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            message: message,
+            conversation_id: conversationId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        location.reload();
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
+
