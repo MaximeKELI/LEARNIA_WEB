@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponse
+from datetime import datetime
 from .models import FicheRevision
 from .services import FichePDFGenerator
 from accounts.models import Chapitre

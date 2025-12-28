@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'gamification',
     'notes',
     'calendar_app',
+    'fiches',
 ]
 
 MIDDLEWARE = [
