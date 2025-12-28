@@ -122,12 +122,12 @@ class FichePDFGenerator:
         """Génère une fiche depuis un deck de flashcards"""
         titre = f"Fiche Flashcards - {deck.titre}"
         
-        contenu = f"<b>{deck.titre}</b><br/><br/>"
-        contenu += "<b>Flashcards:</b><br/><br/>"
+        contenu = f"## {deck.titre}\n\n"
+        contenu += "### Flashcards\n\n"
         
         for i, flashcard in enumerate(deck.flashcards.all(), 1):
-            contenu += f"<b>{i}. {flashcard.recto}</b><br/>"
-            contenu += f"   {flashcard.verso}<br/><br/>"
+            contenu += f"**{i}. {flashcard.recto}**\n\n"
+            contenu += f"   → {flashcard.verso}\n\n"
         
         from .models import FicheRevision
         fiche = FicheRevision(

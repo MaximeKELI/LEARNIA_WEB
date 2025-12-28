@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} une Fiche - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-file-earmark-pdf"></i> {{ action }} une Fiche de Révision</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Titre *</label>
+                        <input type="text" class="form-control" name="titre" value="{% if fiche %}{{ fiche.titre }}{% endif %}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Chapitre (optionnel)</label>
+                        <select class="form-select" name="chapitre_id">
+                            <option value="">Aucun</option>
+                            {% for chapitre in chapitres %}
+                            <option value="{{ chapitre.id }}" {% if fiche and fiche.chapitre and fiche.chapitre.id == chapitre.id %}selected{% endif %}>
+                                {{ chapitre.matiere.nom }} - {{ chapitre.titre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Contenu *</label>
+                        <textarea class="form-control" name="contenu" rows="15" required>{% if fiche %}{{ fiche.contenu }}{% else %}
+# Titre Principal
+
+## Sous-section 1
+Contenu de la section...
+
+## Sous-section 2
+- Point 1
+- Point 2
+- Point 3
+
+**Formule importante:** $formule$
+{% endif %}</textarea>
+                        <small class="form-text text-muted">
+                            Utilisez # pour les titres, ## pour les sous-titres. Les sauts de ligne seront préservés.
+                        </small>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Couleur du titre</label>
+                            <input type="color" class="form-control form-control-color" name="couleur_titre" value="{% if fiche %}{{ fiche.couleur_titre }}{% else %}#007bff{% endif %}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Police</label>
+                            <select class="form-select" name="police">
+                                <option value="Arial" {% if fiche and fiche.police == 'Arial' %}selected{% endif %}>Arial</option>
+                                <option value="Times-Roman" {% if fiche and fiche.police == 'Times-Roman' %}selected{% endif %}>Times New Roman</option>
+                                <option value="Helvetica" {% if fiche and fiche.police == 'Helvetica' %}selected{% endif %}>Helvetica</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'fiches:list' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
