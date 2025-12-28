@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Générer un QCM - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-magic"></i> Générer un QCM</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Titre du QCM</label>
+                        <input type="text" class="form-control" name="titre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Chapitre (optionnel)</label>
+                        <select class="form-select" name="chapitre_id">
+                            <option value="">Aucun</option>
+                            {% for chapitre in chapitres %}
+                            <option value="{{ chapitre.id }}">{{ chapitre.matiere.nom }} - {{ chapitre.titre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Texte source</label>
+                        <textarea class="form-control" name="texte_source" rows="10" required placeholder="Collez ici le texte de votre cours..."></textarea>
+                        <small class="form-text text-muted">Le système générera automatiquement des questions à partir de ce texte.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-magic"></i> Générer le QCM
+                    </button>
+                    <a href="{% url 'qcm:index' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

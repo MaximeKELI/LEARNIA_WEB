@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}QCM - {{ qcm.titre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h4>{{ qcm.titre }}</h4>
+            </div>
+            <div class="card-body">
+                <form id="qcm-form">
+                    {% csrf_token %}
+                    {% for question in questions %}
+                    <div class="mb-4">
+                        <h5>Question {{ question.numero }}</h5>
+                        <p>{{ question.texte }}</p>
+                        <div class="ms-4">
+                            {% for choix in question.choix.all %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="choix_{{ choix.id }}" value="{{ choix.id }}" required>
+                                <label class="form-check-label" for="choix_{{ choix.id }}">
+                                    {{ choix.texte }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> Soumettre
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.getElementById('qcm-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const reponses = {};
+    
+    for (let [key, value] of formData.entries()) {
+        if (key.startsWith('question_')) {
+            reponses[key] = value;
+        }
+    }
+    
+    fetch('{% url "qcm:submit" qcm.id %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ reponses: reponses })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Score : ' + data.score + '/' + data.total + ' (' + data.pourcentage + '%)');
+        window.location.href = '{% url "qcm:index" %}';
+    });
+});
+</script>
+{% endblock %}
+{% endblock %}
+
