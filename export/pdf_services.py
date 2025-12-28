@@ -39,8 +39,10 @@ class PDFExporter:
             
             # Statistiques globales
             total_qcm = queryset.count()
-            score_moyen = queryset.aggregate(avg_score=lambda x: sum(r.pourcentage for r in queryset) / len(queryset) if queryset else 0) if queryset else 0
-            score_moyen_val = score_moyen.get('avg_score', 0) if score_moyen else 0
+            if queryset.exists():
+                score_moyen_val = sum(r.pourcentage for r in queryset) / queryset.count()
+            else:
+                score_moyen_val = 0
             
             stats_text = f"""
             STATISTIQUES GÉNÉRALES

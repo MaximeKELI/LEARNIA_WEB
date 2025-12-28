@@ -20,6 +20,7 @@ urlpatterns = [
     path('planificateur/', include('planner.urls')),
     path('ocr/', include('ocr.urls')),
     path('orientation/', include('orientation.urls')),
+    path('export/', include('export.urls')),
 ]
 
 if settings.DEBUG:

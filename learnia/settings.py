@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'planner',
     'ocr',
     'orientation',
+    'export',
 ]
 
 MIDDLEWARE = [
