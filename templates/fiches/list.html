@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes Fiches - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-file-earmark-pdf"></i> Mes Fiches de Révision</h2>
+    <a href="{% url 'fiches:create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Créer une Fiche
+    </a>
+</div>
+
+<!-- Actions rapides -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Génération rapide</h5>
+    </div>
+    <div class="card-body">
+        <p>Générez une fiche depuis un chapitre ou un deck de flashcards :</p>
+        <a href="{% url 'accounts:chapitre' %}" class="btn btn-outline-primary">
+            <i class="bi bi-book"></i> Depuis un chapitre
+        </a>
+        <a href="{% url 'flashcards:index' %}" class="btn btn-outline-primary">
+            <i class="bi bi-card-text"></i> Depuis un deck
+        </a>
+    </div>
+</div>
+
+<!-- Liste des fiches -->
+{% if fiches %}
+<div class="row">
+    {% for fiche in fiches %}
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ fiche.titre }}</h5>
+                {% if fiche.chapitre %}
+                <p class="text-muted">
+                    <i class="bi bi-book"></i> {{ fiche.chapitre.matiere.nom }} - {{ fiche.chapitre.titre }}
+                </p>
+                {% endif %}
+                <p class="text-muted small">
+                    Créée le {{ fiche.created_at|date:"d/m/Y" }}
+                </p>
+                <a href="{% url 'fiches:download' fiche.id %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-download"></i> Télécharger PDF
+                </a>
+                <a href="{% url 'fiches:delete' fiche.id %}" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> Supprimer
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Aucune fiche créée. 
+    <a href="{% url 'fiches:create' %}">Créez votre première fiche !</a>
+</div>
+{% endif %}
+{% endblock %}
+

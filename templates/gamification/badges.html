@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Badges - Learnia{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-award"></i> Tous les Badges</h2>
+
+<div class="row">
+    {% for item in badges_data %}
+    <div class="col-md-4 mb-4">
+        <div class="card {% if item.obtenu %}border-success{% else %}border-secondary opacity-75{% endif %}">
+            <div class="card-body text-center">
+                <h1 style="font-size: 4rem;">{{ item.badge.icone }}</h1>
+                <h5>{{ item.badge.nom }}</h5>
+                <p class="text-muted">{{ item.badge.description }}</p>
+                {% if item.obtenu %}
+                <span class="badge bg-success">
+                    <i class="bi bi-check-circle"></i> Obtenu
+                </span>
+                <p class="mt-2 mb-0">
+                    <small class="text-muted">+{{ item.badge.points_xp }} XP</small>
+                </p>
+                {% else %}
+                <span class="badge bg-secondary">
+                    <i class="bi bi-lock"></i> À débloquer
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="{% url 'gamification:dashboard' %}" class="btn btn-primary">
+    <i class="bi bi-arrow-left"></i> Retour au tableau de bord
+</a>
+{% endblock %}
+
