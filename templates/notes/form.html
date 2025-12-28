@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} une Note - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-journal-text"></i> {{ action }} une Note</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Titre *</label>
+                        <input type="text" class="form-control" name="titre" value="{% if note %}{{ note.titre }}{% endif %}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Contenu *</label>
+                        <textarea class="form-control" name="contenu" rows="10" required>{% if note %}{{ note.contenu }}{% endif %}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Chapitre (optionnel)</label>
+                        <select class="form-select" name="chapitre_id">
+                            <option value="">Aucun</option>
+                            {% for chapitre in chapitres %}
+                            <option value="{{ chapitre.id }}" {% if note and note.chapitre.id == chapitre.id %}selected{% endif %}>
+                                {{ chapitre.matiere.nom }} - {{ chapitre.titre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Tags (séparés par des virgules)</label>
+                        <input type="text" class="form-control" name="tags" value="{% if note %}{{ note.tags }}{% endif %}" placeholder="ex: important, révision, formule">
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="favori" {% if note and note.favori %}checked{% endif %}>
+                        <label class="form-check-label">Marquer comme favori</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'notes:list' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

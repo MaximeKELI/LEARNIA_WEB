@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.db import models as db_models
 from datetime import datetime, timedelta
 from .models import EvenementScolaire
 
@@ -15,7 +16,7 @@ def calendar_view(request):
     
     # Événements personnels
     evenements = EvenementScolaire.objects.filter(
-        models.Q(user=request.user) | models.Q(public=True)
+        db_models.Q(user=request.user) | db_models.Q(public=True)
     ).filter(
         date_debut__year=year,
         date_debut__month=month
@@ -24,7 +25,7 @@ def calendar_view(request):
     # Événements à venir (7 prochains jours)
     date_aujourdhui = timezone.now().date()
     prochains_evenements = EvenementScolaire.objects.filter(
-        models.Q(user=request.user) | models.Q(public=True)
+        db_models.Q(user=request.user) | db_models.Q(public=True)
     ).filter(
         date_debut__gte=date_aujourdhui
     ).order_by('date_debut')[:10]

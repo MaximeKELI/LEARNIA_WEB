@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ note.titre }} - Learnia{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between">
+                <h4>
+                    {% if note.favori %}<i class="bi bi-star-fill text-warning"></i> {% endif %}
+                    {{ note.titre }}
+                </h4>
+                <div>
+                    <a href="{% url 'notes:toggle_favorite' note.id %}" class="btn btn-sm btn-outline-warning">
+                        <i class="bi bi-star{% if note.favori %}-fill{% endif %}"></i>
+                    </a>
+                    <a href="{% url 'notes:edit' note.id %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    <a href="{% url 'notes:delete' note.id %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if note.chapitre %}
+                <p class="text-muted">
+                    <i class="bi bi-book"></i> {{ note.chapitre.matiere.nom }} - {{ note.chapitre.titre }}
+                </p>
+                {% endif %}
+                
+                {% if note.get_tags_list %}
+                <p>
+                    {% for tag in note.get_tags_list %}
+                    <span class="badge bg-secondary">{{ tag }}</span>
+                    {% endfor %}
+                </p>
+                {% endif %}
+                
+                <div class="note-content">
+                    {{ note.contenu|linebreaks }}
+                </div>
+                
+                <hr>
+                <small class="text-muted">
+                    Créée le {{ note.created_at|date:"d/m/Y à H:i" }} - 
+                    Modifiée le {{ note.updated_at|date:"d/m/Y à H:i" }}
+                </small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        {% if versions %}
+        <div class="card">
+            <div class="card-header">
+                <h5>Historique</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for version in versions %}
+                    <li class="list-group-item">
+                        <small>{{ version.created_at|date:"d/m/Y H:i" }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
