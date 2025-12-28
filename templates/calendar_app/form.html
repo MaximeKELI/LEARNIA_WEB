@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} un Événement - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-calendar-event"></i> {{ action }} un Événement</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Titre *</label>
+                        <input type="text" class="form-control" name="titre" value="{% if evenement %}{{ evenement.titre }}{% endif %}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="3">{% if evenement %}{{ evenement.description }}{% endif %}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Type *</label>
+                            <select class="form-select" name="type_evenement" required>
+                                <option value="examen" {% if evenement and evenement.type_evenement == 'examen' %}selected{% endif %}>Examen</option>
+                                <option value="vacances" {% if evenement and evenement.type_evenement == 'vacances' %}selected{% endif %}>Vacances</option>
+                                <option value="fete" {% if evenement and evenement.type_evenement == 'fete' %}selected{% endif %}>Fête</option>
+                                <option value="reunion" {% if evenement and evenement.type_evenement == 'reunion' %}selected{% endif %}>Réunion</option>
+                                <option value="activite" {% if evenement and evenement.type_evenement == 'activite' %}selected{% endif %}>Activité</option>
+                                <option value="rappel" {% if evenement and evenement.type_evenement == 'rappel' %}selected{% endif %}>Rappel</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Matière (optionnel)</label>
+                            <select class="form-select" name="matiere_id">
+                                <option value="">Aucune</option>
+                                {% for matiere in matieres %}
+                                <option value="{{ matiere.id }}" {% if evenement and evenement.matiere and evenement.matiere.id == matiere.id %}selected{% endif %}>
+                                    {{ matiere.nom }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date de début *</label>
+                            <input type="date" class="form-control" name="date_debut" value="{% if evenement %}{{ evenement.date_debut|date:'Y-m-d' }}{% endif %}" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date de fin</label>
+                            <input type="date" class="form-control" name="date_fin" value="{% if evenement and evenement.date_fin %}{{ evenement.date_fin|date:'Y-m-d' }}{% endif %}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Heure de début</label>
+                            <input type="time" class="form-control" name="heure_debut" value="{% if evenement and evenement.heure_debut %}{{ evenement.heure_debut|time:'H:i' }}{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Heure de fin</label>
+                            <input type="time" class="form-control" name="heure_fin" value="{% if evenement and evenement.heure_fin %}{{ evenement.heure_fin|time:'H:i' }}{% endif %}">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Couleur</label>
+                            <input type="color" class="form-control form-control-color" name="couleur" value="{% if evenement %}{{ evenement.couleur }}{% else %}#007bff{% endif %}">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Rappel (jours avant)</label>
+                            <input type="number" class="form-control" name="rappel_jours" value="{% if evenement %}{{ evenement.rappel_jours }}{% else %}1{% endif %}" min="0" max="30">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="public" {% if evenement and evenement.public %}checked{% endif %}>
+                        <label class="form-check-label">Événement public (visible par tous)</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'calendar:view' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
