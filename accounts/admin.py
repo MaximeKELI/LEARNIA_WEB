@@ -22,7 +22,14 @@ class MatiereAdmin(admin.ModelAdmin):
     list_display = ['nom', 'code', 'niveau', 'icone', 'nombre_chapitres']
     list_filter = ['niveau']
     search_fields = ['nom', 'code', 'description']
-    readonly_fields = ['created_at'] if hasattr(Matiere, 'created_at') else []
+    fieldsets = (
+        ('Informations', {
+            'fields': ('nom', 'code', 'niveau', 'icone')
+        }),
+        ('Description', {
+            'fields': ('description',)
+        }),
+    )
     
     def nombre_chapitres(self, obj):
         return obj.chapitres.count()

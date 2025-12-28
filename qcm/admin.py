@@ -5,7 +5,7 @@ from .models import QCM, Question, Choix, ResultatQCM
 class ChoixInline(admin.TabularInline):
     model = Choix
     extra = 3
-    fields = ['texte', 'est_correct', 'numero']
+    fields = ['texte', 'est_correct']
 
 
 class QuestionInline(admin.TabularInline):
