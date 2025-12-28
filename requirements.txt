@@ -10,4 +10,5 @@ selenium>=4.15.0
 coverage>=7.3.0
 factory-boy>=3.3.0
 pandas>=2.0.0
+reportlab>=4.0.0
 

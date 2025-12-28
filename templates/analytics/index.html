@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes Analyses - Learnia{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-graph-up"></i> Mes Performances</h2>
+    
+    <!-- Statistiques générales -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-question-circle"></i> QCM</h5>
+                    <h3>{{ total_qcm }}</h3>
+                    <small class="text-muted">complétés</small>
+                    <p class="mt-2 mb-0">
+                        <strong>Moyenne: {{ score_moyen_qcm }}%</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-card-text"></i> Flashcards</h5>
+                    <h3>{{ total_flashcards }}</h3>
+                    <small class="text-muted">révisions</small>
+                    <p class="mt-2 mb-0">
+                        <strong>Taux: {{ taux_reussite }}%</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-trophy"></i> Niveau</h5>
+                    {% if progress %}
+                    <h3>{{ progress.niveau }}</h3>
+                    <small class="text-muted">{{ progress.points_xp }} XP</small>
+                    {% else %}
+                    <h3>1</h3>
+                    <small class="text-muted">0 XP</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-fire"></i> Série</h5>
+                    {% if progress %}
+                    <h3>{{ progress.jours_streak }}</h3>
+                    <small class="text-muted">jours consécutifs</small>
+                    {% else %}
+                    <h3>0</h3>
+                    <small class="text-muted">commencez aujourd'hui!</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Graphique d'évolution -->
+    {% if resultats_par_mois %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4><i class="bi bi-bar-chart-line"></i> Évolution des Scores (6 derniers mois)</h4>
+        </div>
+        <div class="card-body">
+            <canvas id="scoreChart" width="400" height="100"></canvas>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Performances par matière -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4><i class="bi bi-book"></i> Performances par Matière</h4>
+        </div>
+        <div class="card-body">
+            {% if performances %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Matière</th>
+                            <th>Score moyen</th>
+                            <th>QCM complétés</th>
+                            <th>Flashcards</th>
+                            <th>Temps d'étude</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for perf in performances %}
+                        <tr>
+                            <td>{{ perf.matiere.nom }}</td>
+                            <td>
+                                <div class="progress" style="height: 25px;">
+                                    <div class="progress-bar {% if perf.score_moyen >= 80 %}bg-success{% elif perf.score_moyen >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ perf.score_moyen }}%">
+                                        {{ perf.score_moyen|floatformat:1 }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ perf.nombre_qcm }}</td>
+                            <td>{{ perf.nombre_flashcards }}</td>
+                            <td>{{ perf.temps_etude_minutes }} min</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">Aucune performance enregistrée pour le moment.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Activités récentes -->
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="bi bi-clock-history"></i> Activités Récentes</h4>
+        </div>
+        <div class="card-body">
+            {% if activites_recentes %}
+            <ul class="list-group">
+                {% for activite in activites_recentes %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>{{ activite.type_activite|upper }}</strong> - {{ activite.description }}
+                        </div>
+                        <small class="text-muted">{{ activite.created_at|date:"d/m/Y H:i" }}</small>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted">Aucune activité récente.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if resultats_par_mois %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('scoreChart').getContext('2d');
+const scoreChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [{% for r in resultats_par_mois %}'{{ r.mois }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Score moyen (%)',
+            data: [{% for r in resultats_par_mois %}{{ r.score }}{% if not forloop.last %},{% endif %}{% endfor %}],
+            borderColor: 'rgb(75, 192, 192)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
+{% endif %}
+{% endblock %}
+

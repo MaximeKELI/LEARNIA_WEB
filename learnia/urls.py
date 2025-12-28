@@ -24,6 +24,7 @@ urlpatterns = [
     path('gamification/', include('gamification.urls')),
     path('notes/', include('notes.urls')),
     path('calendrier/', include('calendar_app.urls')),
+    path('fiches/', include('fiches.urls')),
 ]
 
 if settings.DEBUG:
