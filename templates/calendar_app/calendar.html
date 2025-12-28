@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendrier - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-calendar-check"></i> Calendrier Scolaire</h2>
+    <a href="{% url 'calendar:create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nouvel Événement
+    </a>
+</div>
+
+<!-- Navigation mois -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <a href="?year={% if month == 1 %}{{ year|add:'-1' }}{% else %}{{ year }}{% endif %}&month={% if month == 1 %}12{% else %}{{ month|add:'-1' }}{% endif %}" class="btn btn-outline-primary">
+                <i class="bi bi-chevron-left"></i> Mois précédent
+            </a>
+            <h4>{{ month }}/{{ year }}</h4>
+            <a href="?year={% if month == 12 %}{{ year|add:'1' }}{% else %}{{ year }}{% endif %}&month={% if month == 12 %}1{% else %}{{ month|add:'1' }}{% endif %}" class="btn btn-outline-primary">
+                Mois suivant <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Calendrier mensuel simple -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Lun</th><th>Mar</th><th>Mer</th><th>Jeu</th><th>Ven</th><th>Sam</th><th>Dim</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for semaine in evenements|dictsort:"date_debut" %}
+                    <tr>
+                        {% for jour in range %}
+                        <td>
+                            {% if jour %}
+                            <strong>{{ jour }}</strong>
+                            {% for event in evenements %}
+                                {% if event.date_debut.day == jour %}
+                                <div class="small" style="background-color: {{ event.couleur }}; color: white; padding: 2px; margin: 2px 0; border-radius: 3px;">
+                                    {{ event.titre|truncatewords:3 }}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Prochains événements -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4><i class="bi bi-calendar-event"></i> Prochains Événements</h4>
+    </div>
+    <div class="card-body">
+        {% if prochains_evenements %}
+        <div class="list-group">
+            {% for event in prochains_evenements %}
+            <div class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>
+                            <span style="color: {{ event.couleur }};">●</span>
+                            {{ event.titre }}
+                        </h6>
+                        <p class="mb-1 small">{{ event.description|truncatewords:20 }}</p>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i> {{ event.date_debut|date:"d/m/Y" }}
+                            {% if event.heure_debut %}à {{ event.heure_debut|time:"H:i" }}{% endif %}
+                            {% if event.matiere %} - {{ event.matiere.nom }}{% endif %}
+                        </small>
+                    </div>
+                    {% if event.user == user %}
+                    <div>
+                        <a href="{% url 'calendar:edit' event.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a href="{% url 'calendar:delete' event.id %}" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">Aucun événement à venir.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Événements ce mois</h5>
+                <h3>{{ evenements_ce_mois }}</h3>
+                <small class="text-muted">{{ evenements_ce_mois_user }} personnels</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5>Prochains jours</h5>
+                <h3>{{ prochains_evenements|length }}</h3>
+                <small class="text-muted">événements à venir</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

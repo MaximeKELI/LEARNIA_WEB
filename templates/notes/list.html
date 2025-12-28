@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes Notes - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-journal-text"></i> Mes Notes</h2>
+    <a href="{% url 'notes:create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nouvelle Note
+    </a>
+</div>
+
+<!-- Filtres -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="{{ recherche }}">
+            </div>
+            <div class="col-md-3">
+                <select name="tag" class="form-select">
+                    <option value="">Tous les tags</option>
+                    {% for tag in tags %}
+                    <option value="{{ tag }}" {% if tag_filter == tag %}selected{% endif %}>{{ tag }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="favori" class="form-select">
+                    <option value="">Toutes</option>
+                    <option value="true" {% if favori_filter == 'true' %}selected{% endif %}>Favorites uniquement</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Filtrer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5>Total Notes</h5>
+                <h3>{{ total_notes }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5>Favorites</h5>
+                <h3>{{ notes_favorites }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5>Tags</h5>
+                <h3>{{ tags|length }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Liste des notes -->
+{% if notes %}
+<div class="row">
+    {% for note in notes %}
+    <div class="col-md-6 mb-3">
+        <div class="card {% if note.favori %}border-warning{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5 class="card-title">
+                        {% if note.favori %}<i class="bi bi-star-fill text-warning"></i> {% endif %}
+                        {{ note.titre }}
+                    </h5>
+                    <div>
+                        <a href="{% url 'notes:toggle_favorite' note.id %}" class="btn btn-sm btn-outline-warning">
+                            <i class="bi bi-star{% if note.favori %}-fill{% endif %}"></i>
+                        </a>
+                        <a href="{% url 'notes:edit' note.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                    </div>
+                </div>
+                <p class="card-text">
+                    {{ note.contenu|truncatewords:30 }}
+                </p>
+                {% if note.chapitre %}
+                <p class="text-muted small">
+                    <i class="bi bi-book"></i> {{ note.chapitre.matiere.nom }} - {{ note.chapitre.titre }}
+                </p>
+                {% endif %}
+                {% if note.get_tags_list %}
+                <p class="small">
+                    {% for tag in note.get_tags_list %}
+                    <span class="badge bg-secondary">{{ tag }}</span>
+                    {% endfor %}
+                </p>
+                {% endif %}
+                <p class="text-muted small">
+                    Modifié le {{ note.updated_at|date:"d/m/Y H:i" }}
+                </p>
+                <a href="{% url 'notes:detail' note.id %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-eye"></i> Voir
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Aucune note trouvée. 
+    <a href="{% url 'notes:create' %}">Créez votre première note !</a>
+</div>
+{% endif %}
+{% endblock %}
+
