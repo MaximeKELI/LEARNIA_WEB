@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Export/Import de Données - Learnia{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-download"></i> Export/Import de Données</h2>
+    
+    <!-- Export CSV -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="bi bi-filetype-csv"></i> Export CSV</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-people"></i> Utilisateurs</h5>
+                            <p class="text-muted">Export de tous les utilisateurs avec leurs informations</p>
+                            <a href="{% url 'export:export_users_csv' %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-bar-chart"></i> Statistiques QCM</h5>
+                            <p class="text-muted">Export des résultats des QCM</p>
+                            <a href="{% url 'export:export_statistics_csv' %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-card-text"></i> Statistiques Flashcards</h5>
+                            <p class="text-muted">Export des révisions flashcards</p>
+                            <a href="{% url 'export:export_flashcards_csv' %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-graph-up"></i> Performances</h5>
+                            <p class="text-muted">Export des performances par matière</p>
+                            <a href="{% url 'export:export_performances_csv' %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-activity"></i> Activités</h5>
+                            <p class="text-muted">Export de toutes les activités utilisateurs</p>
+                            <a href="{% url 'export:export_activities_csv' %}" class="btn btn-primary">
+                                <i class="bi bi-download"></i> Télécharger CSV
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <h5><i class="bi bi-database"></i> Data Science (CSV)</h5>
+                            <p class="text-muted"><strong>Export consolidé pour analyses</strong></p>
+                            <p class="small">Toutes les données agrégées par utilisateur et matière</p>
+                            <a href="{% url 'export:export_data_science_csv' %}" class="btn btn-success">
+                                <i class="bi bi-download"></i> Télécharger CSV Data Science
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export PDF -->
+    <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+            <h4><i class="bi bi-filetype-pdf"></i> Export PDF avec Graphiques</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card border">
+                        <div class="card-body">
+                            <h5><i class="bi bi-bar-chart-line"></i> Statistiques PDF</h5>
+                            <p class="text-muted">Rapport PDF avec graphiques des statistiques</p>
+                            <a href="{% url 'export:export_statistics_pdf' %}" class="btn btn-danger">
+                                <i class="bi bi-download"></i> Télécharger PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <div class="card border-success">
+                        <div class="card-body">
+                            <h5><i class="bi bi-database"></i> Data Science (PDF)</h5>
+                            <p class="text-muted"><strong>Rapport complet avec graphiques</strong></p>
+                            <p class="small">Rapport consolidé pour analyses approfondies</p>
+                            <a href="{% url 'export:export_data_science_pdf' %}" class="btn btn-success">
+                                <i class="bi bi-download"></i> Télécharger PDF Data Science
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Import CSV -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h4><i class="bi bi-upload"></i> Import CSV</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="{% url 'export:import_users_csv' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="csv_file" class="form-label">Fichier CSV Utilisateurs</label>
+                    <input type="file" class="form-control" id="csv_file" name="csv_file" accept=".csv" required>
+                    <div class="form-text">
+                        Format attendu: Username, Email, Prénom, Nom, Niveau d'étude, Classe, École
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-warning">
+                    <i class="bi bi-upload"></i> Importer
+                </button>
+            </form>
+            
+            <div class="alert alert-info mt-3">
+                <h6>Format CSV pour l'import:</h6>
+                <pre class="mb-0">Username,Email,Prénom,Nom,Niveau d'étude,Classe,École
+john,john@example.com,John,Doe,6e,6ème A,École Test</pre>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Documentation -->
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="bi bi-info-circle"></i> Documentation</h4>
+        </div>
+        <div class="card-body">
+            <h5>Export CSV</h5>
+            <ul>
+                <li><strong>Utilisateurs:</strong> Toutes les informations des utilisateurs</li>
+                <li><strong>Statistiques:</strong> Résultats des QCM avec scores et pourcentages</li>
+                <li><strong>Flashcards:</strong> Historique des révisions avec succès/échecs</li>
+                <li><strong>Performances:</strong> Performances agrégées par matière</li>
+                <li><strong>Data Science:</strong> Export consolidé optimisé pour analyses</li>
+            </ul>
+            
+            <h5>Export PDF</h5>
+            <ul>
+                <li><strong>Statistiques PDF:</strong> Graphiques des scores par matière et évolution temporelle</li>
+                <li><strong>Data Science PDF:</strong> Rapport complet avec visualisations</li>
+            </ul>
+            
+            <h5>Utilisation pour Data Science</h5>
+            <p>Les exports CSV peuvent être directement utilisés dans:</p>
+            <ul>
+                <li>Pandas (Python): <code>pd.read_csv('export.csv')</code></li>
+                <li>R: <code>read.csv('export.csv')</code></li>
+                <li>Excel / LibreOffice Calc</li>
+                <li>Tableau / Power BI</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
