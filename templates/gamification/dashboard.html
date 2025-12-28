@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Gamification - Learnia{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-trophy"></i> Mon Progression</h2>
+    
+    <!-- Niveau et XP -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4>Niveau {{ progress.niveau }} - {{ progress.points_xp }} XP</h4>
+                </div>
+                <div class="card-body">
+                    <div class="progress" style="height: 30px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" 
+                             style="width: {{ pourcentage }}%;"
+                             aria-valuenow="{{ pourcentage }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ pourcentage }}%
+                        </div>
+                    </div>
+                    <p class="mt-2">
+                        <strong>{{ progress.points_xp }}</strong> XP / 
+                        <strong>{{ progress.niveau|add:0|add:"-1"|add:"0"|add:"0" }}</strong> XP 
+                        (Il reste {{ xp_needed }} XP pour le niveau {{ progress.niveau|add:1 }})
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>🔥 Série</h5>
+                    <h2>{{ progress.jours_streak }}</h2>
+                    <p class="text-muted">jours consécutifs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-question-circle"></i> QCM</h5>
+                    <h3>{{ progress.qcm_completes }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-card-text"></i> Flashcards</h5>
+                    <h3>{{ progress.flashcards_creees }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-robot"></i> Questions</h5>
+                    <h3>{{ progress.questions_tuteur }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5><i class="bi bi-trophy"></i> Badges</h5>
+                    <h3>{{ badges_obtenus.count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Badges obtenus -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4><i class="bi bi-award"></i> Mes Badges</h4>
+        </div>
+        <div class="card-body">
+            {% if badges_obtenus %}
+            <div class="row">
+                {% for user_badge in badges_obtenus %}
+                <div class="col-md-3 mb-3">
+                    <div class="card border-success">
+                        <div class="card-body text-center">
+                            <h1>{{ user_badge.badge.icone }}</h1>
+                            <h6>{{ user_badge.badge.nom }}</h6>
+                            <small class="text-muted">{{ user_badge.badge.description }}</small>
+                            <p class="mt-2">
+                                <span class="badge bg-success">+{{ user_badge.badge.points_xp }} XP</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-center text-muted">Aucun badge obtenu pour le moment. Continuez vos efforts !</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Badges à débloquer -->
+    {% if badges_disponibles %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4><i class="bi bi-lock"></i> Badges à Débloquer</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for badge in badges_disponibles %}
+                <div class="col-md-3 mb-3">
+                    <div class="card border-secondary opacity-50">
+                        <div class="card-body text-center">
+                            <h1 style="filter: grayscale(100%);">{{ badge.icone }}</h1>
+                            <h6>{{ badge.nom }}</h6>
+                            <small class="text-muted">{{ badge.description }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Classement -->
+    {% if leaderboard %}
+    <div class="card">
+        <div class="card-header bg-warning">
+            <h4><i class="bi bi-trophy-fill"></i> Classement</h4>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Position</th>
+                        <th>Utilisateur</th>
+                        <th>Niveau</th>
+                        <th>XP</th>
+                        <th>Badges</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in leaderboard %}
+                    <tr {% if entry.user.id == user.id %}class="table-warning"{% endif %}>
+                        <td>
+                            {% if entry.position == 1 %}🥇
+                            {% elif entry.position == 2 %}🥈
+                            {% elif entry.position == 3 %}🥉
+                            {% else %}{{ entry.position }}{% endif %}
+                        </td>
+                        <td>{{ entry.user.username }}</td>
+                        <td>Niveau {{ entry.niveau }}</td>
+                        <td><strong>{{ entry.points_xp }}</strong> XP</td>
+                        <td>{{ entry.badges_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if user_position and user_position > 10 %}
+            <p class="text-center">
+                Votre position: <strong>#{{ user_position }}</strong>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

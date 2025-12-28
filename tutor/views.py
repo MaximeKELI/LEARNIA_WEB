@@ -70,7 +70,14 @@ def send_message(request):
         role='assistant',
         contenu=response
     )
-
+    
+    # Ajouter des points XP via la gamification
+    try:
+        from gamification.services import GamificationService
+        GamificationService.ajouter_xp_tuteur(request.user)
+    except:
+        pass
+    
     return JsonResponse({
         'response': response,
         'conversation_id': conversation.id

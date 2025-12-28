@@ -21,6 +21,9 @@ urlpatterns = [
     path('ocr/', include('ocr.urls')),
     path('orientation/', include('orientation.urls')),
     path('export/', include('export.urls')),
+    path('gamification/', include('gamification.urls')),
+    path('notes/', include('notes.urls')),
+    path('calendrier/', include('calendar_app.urls')),
 ]
 
 if settings.DEBUG:

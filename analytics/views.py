@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import models
+from django.utils import timezone
+from datetime import timedelta
 from .models import Performance, Activite
 from qcm.models import ResultatQCM
 from flashcards.models import Revision
@@ -24,6 +26,33 @@ def analytics_index(request):
     
     activites_recentes = Activite.objects.filter(user=request.user)[:10]
     
+    # Données pour graphiques (évolution temporelle)
+    resultats_par_mois = []
+    for i in range(6):  # 6 derniers mois
+        mois = timezone.now().replace(day=1) - timedelta(days=30*i)
+        resultats_mois = ResultatQCM.objects.filter(
+            user=request.user,
+            created_at__year=mois.year,
+            created_at__month=mois.month
+        )
+        if resultats_mois.exists():
+            score_moyen = sum(r.pourcentage for r in resultats_mois) / resultats_mois.count()
+            resultats_par_mois.append({
+                'mois': mois.strftime('%Y-%m'),
+                'score': round(score_moyen, 2),
+                'nombre': resultats_mois.count()
+            })
+    
+    resultats_par_mois.reverse()
+    
+    # Gamification stats
+    from gamification.models import UserProgress
+    progress = None
+    try:
+        progress = UserProgress.objects.get(user=request.user)
+    except:
+        pass
+    
     return render(request, 'analytics/index.html', {
         'performances': performances,
         'total_qcm': total_qcm,
@@ -31,6 +60,8 @@ def analytics_index(request):
         'total_flashcards': total_flashcards,
         'taux_reussite': round(taux_reussite, 2),
         'activites_recentes': activites_recentes,
+        'resultats_par_mois': resultats_par_mois,
+        'progress': progress,
     })
 
 

@@ -107,6 +107,13 @@ def submit_qcm(request, qcm_id):
         pourcentage=pourcentage
     )
     
+    # Ajouter des points XP via la gamification
+    try:
+        from gamification.services import GamificationService
+        GamificationService.ajouter_xp_qcm(request.user, pourcentage)
+    except:
+        pass  # Si la gamification n'est pas disponible
+    
     return JsonResponse({
         'score': score,
         'total': total,

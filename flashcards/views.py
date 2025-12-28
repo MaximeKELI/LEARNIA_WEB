@@ -65,6 +65,13 @@ def add_flashcard(request, deck_id):
             verso=verso
         )
         
+        # Ajouter des points XP via la gamification
+        try:
+            from gamification.services import GamificationService
+            GamificationService.ajouter_xp_flashcard(request.user)
+        except:
+            pass
+        
         return redirect('flashcards:deck_detail', deck_id=deck.id)
     
     return render(request, 'flashcards/add_flashcard.html', {'deck': deck})
