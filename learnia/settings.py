@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'ocr',
     'orientation',
     'export',
+    'gamification',
+    'notes',
+    'calendar_app',
 ]
 
 MIDDLEWARE = [
