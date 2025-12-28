@@ -78,18 +78,47 @@ class FichePDFGenerator:
         story.append(Spacer(1, 0.1*inch))
         
         # Contenu de la fiche (convertir les sauts de ligne)
-        contenu_paragraphes = fiche.contenu.split('\n\n')
-        for para in contenu_paragraphes:
-            if para.strip():
-                # Détecter les titres (lignes avec #)
-                if para.strip().startswith('#'):
-                    title_text = para.strip().lstrip('#').strip()
-                    story.append(Paragraph(title_text, heading_style))
-                else:
-                    # Convertir les sauts de ligne simples en <br/>
-                    para_html = para.replace('\n', '<br/>')
-                    story.append(Paragraph(para_html, body_style))
+        lines = fiche.contenu.split('\n')
+        current_para = []
+        
+        for line in lines:
+            line = line.strip()
+            if not line:
+                if current_para:
+                    para_text = ' '.join(current_para)
+                    story.append(Paragraph(para_text, body_style))
+                    story.append(Spacer(1, 0.1*inch))
+                    current_para = []
+                continue
+            
+            # Détecter les titres (lignes avec #)
+            if line.startswith('##'):
+                if current_para:
+                    para_text = ' '.join(current_para)
+                    story.append(Paragraph(para_text, body_style))
+                    story.append(Spacer(1, 0.1*inch))
+                    current_para = []
+                title_text = line.lstrip('#').strip()
+                story.append(Paragraph(f"<b>{title_text}</b>", heading_style))
                 story.append(Spacer(1, 0.1*inch))
+            elif line.startswith('#'):
+                if current_para:
+                    para_text = ' '.join(current_para)
+                    story.append(Paragraph(para_text, body_style))
+                    story.append(Spacer(1, 0.1*inch))
+                    current_para = []
+                title_text = line.lstrip('#').strip()
+                story.append(Paragraph(f"<b>{title_text}</b>", heading_style))
+                story.append(Spacer(1, 0.1*inch))
+            else:
+                # Convertir **bold** en HTML
+                line = line.replace('**', '<b>', 1).replace('**', '</b>', 1)
+                current_para.append(line)
+        
+        # Ajouter le dernier paragraphe
+        if current_para:
+            para_text = ' '.join(current_para)
+            story.append(Paragraph(para_text, body_style))
         
         # Générer le PDF
         doc.build(story)
