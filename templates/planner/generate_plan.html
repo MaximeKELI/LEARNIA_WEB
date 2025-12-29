@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Générer un Plan de Révision - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4><i class="bi bi-magic"></i> Générer un Plan de Révision Intelligent</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Sélectionnez un examen pour générer automatiquement un plan de révision réparti sur les jours précédant l'examen.</p>
+                
+                {% if examens %}
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Sélectionner un examen *</label>
+                        <select class="form-select form-select-lg" name="examen_id" required>
+                            <option value="">Choisir un examen...</option>
+                            {% for examen in examens %}
+                            <option value="{{ examen.id }}">
+                                {{ examen.nom }} - {{ examen.matiere.nom }} 
+                                ({{ examen.date_examen|date:"d/m/Y" }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-text text-muted">
+                            Le système créera automatiquement des révisions pour tous les chapitres de cette matière, 
+                            réparties équitablement jusqu'à la date de l'examen.
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Comment ça fonctionne ?</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Les révisions seront créées pour tous les chapitres de la matière</li>
+                            <li>Elles seront réparties équitablement jusqu'à la date de l'examen</li>
+                            <li>Chaque révision durera 45 minutes par défaut</li>
+                            <li>Le type de révision sera défini sur "QCM"</li>
+                        </ul>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-magic"></i> Générer le Plan
+                    </button>
+                    <a href="{% url 'planner:index' %}" class="btn btn-secondary btn-lg">Annuler</a>
+                </form>
+                {% else %}
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    Aucun examen à venir. Créez d'abord un examen pour générer un plan de révision.
+                </div>
+                <a href="{% url 'planner:create_examen' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Créer un Examen
+                </a>
+                <a href="{% url 'planner:index' %}" class="btn btn-secondary">Retour</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
