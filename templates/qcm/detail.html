@@ -46,9 +46,12 @@ document.getElementById('qcm-form').addEventListener('submit', function(e) {
     const formData = new FormData(this);
     const reponses = {};
     
+    // Extraire les réponses : question_id -> choix_id
     for (let [key, value] of formData.entries()) {
         if (key.startsWith('question_')) {
-            reponses[key] = value;
+            // Extraire l'ID de la question (format: "question_1" -> 1)
+            const questionId = key.replace('question_', '');
+            reponses[questionId] = parseInt(value);
         }
     }
     
@@ -60,10 +63,19 @@ document.getElementById('qcm-form').addEventListener('submit', function(e) {
         },
         body: JSON.stringify({ reponses: reponses })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la soumission du QCM');
+        }
+        return response.json();
+    })
     .then(data => {
         alert('Score : ' + data.score + '/' + data.total + ' (' + data.pourcentage + '%)');
         window.location.href = '{% url "qcm:index" %}';
+    })
+    .catch(error => {
+        console.error('Erreur:', error);
+        alert('Une erreur est survenue lors de la soumission du QCM. Veuillez réessayer.');
     });
 });
 </script>

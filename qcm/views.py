@@ -83,18 +83,38 @@ def qcm_detail(request, qcm_id):
 def submit_qcm(request, qcm_id):
     """Soumet les réponses d'un QCM"""
     qcm = get_object_or_404(QCM, id=qcm_id, user=request.user)
-    data = json.loads(request.body)
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Données JSON invalides'}, status=400)
+    
     reponses = data.get('reponses', {})
+    
+    if not reponses:
+        return JsonResponse({'error': 'Aucune réponse fournie'}, status=400)
     
     score = 0
     total = qcm.questions.count()
     
     # Vérifier les réponses
-    for question_id, choix_id in reponses.items():
-        question = Question.objects.get(id=question_id)
-        choix = Choix.objects.get(id=choix_id)
-        if choix.est_correct:
-            score += 1
+    for key, choix_id in reponses.items():
+        try:
+            # Gérer deux formats possibles :
+            # 1. Clé numérique directe : "1" -> 1
+            # 2. Clé avec préfixe : "question_1" -> 1
+            if isinstance(key, str) and key.startswith('question_'):
+                question_id = int(key.replace('question_', ''))
+            else:
+                question_id = int(key)
+            
+            question = Question.objects.get(id=question_id, qcm=qcm)
+            choix = Choix.objects.get(id=int(choix_id), question=question)
+            if choix.est_correct:
+                score += 1
+        except (ValueError, Question.DoesNotExist, Choix.DoesNotExist) as e:
+            # Ignorer les réponses invalides
+            continue
     
     pourcentage = (score / total * 100) if total > 0 else 0
     
