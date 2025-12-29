@@ -27,3 +27,35 @@ body {
     margin-top: auto;
 }
 
+/* Logo dans navbar - fond blanc pour faire ressortir le logo bleu */
+.learnia-logo-navbar {
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover .learnia-logo-navbar {
+    transform: scale(1.1);
+}
+
+/* Style pour le logo sur la page d'accueil - fond blanc aussi */
+.learnia-logo-home {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    animation: fadeInDown 1s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
