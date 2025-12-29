@@ -101,7 +101,53 @@ Génère un résumé concis et pédagogique."""
         return [p[0] for p in phrases_avec_score]
     
     def extraire_points_cles(self, texte):
-        """Extrait les points clés du texte"""
+        """Extrait les points clés du texte avec Gemini AI"""
+        # Essayer d'abord avec Gemini
+        if GeminiService.is_available():
+            points = self._extraire_points_avec_gemini(texte)
+            if points:
+                return points
+        
+        # Fallback vers l'ancien système
+        return self._extraire_points_fallback(texte)
+    
+    def _extraire_points_avec_gemini(self, texte):
+        """Extrait les points clés avec Gemini AI"""
+        system_instruction = """Tu es un assistant pédagogique qui extrait les points clés d'un texte de cours.
+        
+Extrais les 5 points les plus importants et présente-les sous forme de liste à puces."""
+        
+        prompt = f"""Extrais les 5 points clés les plus importants du texte suivant.
+
+TEXTE :
+{texte[:2000]}
+
+Réponds sous forme de liste à puces, chaque point sur une nouvelle ligne commençant par "-"."""
+        
+        response = GeminiService.generate_structured_response(
+            prompt=prompt,
+            system_instruction=system_instruction,
+            format_type="list"
+        )
+        
+        if response:
+            # Parser la liste à puces
+            points = []
+            for line in response.split('\n'):
+                line = line.strip()
+                if line.startswith('-') or line.startswith('•') or line.startswith('*'):
+                    point = line.lstrip('-•*').strip()
+                    if point and len(point) <= 150:  # Limiter la longueur
+                        points.append(point)
+                elif line and len(line) <= 150:
+                    points.append(line)
+            
+            return points[:5] if points else None
+        
+        return None
+    
+    def _extraire_points_fallback(self, texte):
+        """Extrait les points clés avec le système de fallback (ancien système)"""
         phrases = re.split(r'[.!?]\s+', texte)
         phrases = [p.strip() for p in phrases if len(p.strip()) > 20]
         

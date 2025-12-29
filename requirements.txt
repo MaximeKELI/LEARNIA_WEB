@@ -11,4 +11,5 @@ coverage>=7.3.0
 factory-boy>=3.3.0
 pandas>=2.0.0
 reportlab>=4.0.0
+google-generativeai>=0.8.0
 
