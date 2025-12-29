@@ -37,3 +37,4 @@ class PostAdmin(admin.ModelAdmin):
             obj.auteur = request.user
         super().save_model(request, obj, form, change)
 
+

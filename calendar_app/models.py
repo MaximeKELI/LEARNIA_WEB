@@ -41,3 +41,4 @@ class EvenementScolaire(models.Model):
     def __str__(self):
         return f"{self.titre} - {self.date_debut}"
 
+

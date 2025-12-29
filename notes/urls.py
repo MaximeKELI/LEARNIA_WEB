@@ -12,3 +12,4 @@ urlpatterns = [
     path('<int:note_id>/favorite/', views.note_toggle_favorite, name='toggle_favorite'),
 ]
 
+

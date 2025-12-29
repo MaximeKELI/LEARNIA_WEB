@@ -1,5 +1,6 @@
 from django import template
 from django.utils import timezone
+from django.db import models
 from posts.models import Post
 
 register = template.Library()
@@ -17,8 +18,3 @@ def get_priority_posts(limit=5):
     ).order_by('-date_publication')[:limit]
     
     return posts
-
-
-register = template.Library()
-from django.db import models
-

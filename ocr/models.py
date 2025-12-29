@@ -20,3 +20,4 @@ class Devoir(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.matiere} ({self.created_at.strftime('%d/%m/%Y')})"
 
+

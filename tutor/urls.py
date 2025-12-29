@@ -10,3 +10,4 @@ urlpatterns = [
     path('new/', views.new_conversation, name='new_conversation'),
 ]
 
+

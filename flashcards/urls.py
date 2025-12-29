@@ -12,3 +12,4 @@ urlpatterns = [
     path('flashcard/<int:flashcard_id>/mark/', views.mark_revision, name='mark_revision'),
 ]
 
+

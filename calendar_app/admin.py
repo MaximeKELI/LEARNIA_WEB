@@ -9,3 +9,4 @@ class EvenementScolaireAdmin(admin.ModelAdmin):
     search_fields = ['titre', 'description', 'user__username']
     date_hierarchy = 'date_debut'
 
+

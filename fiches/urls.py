@@ -12,3 +12,4 @@ urlpatterns = [
     path('<int:fiche_id>/delete/', views.fiche_delete, name='delete'),
 ]
 
+

@@ -175,3 +175,4 @@ class NotesViewsTest(TestCase):
         note.refresh_from_db()
         self.assertTrue(note.favori)
 
+

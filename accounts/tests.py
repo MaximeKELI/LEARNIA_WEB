@@ -336,3 +336,4 @@ class AccountsFormsTest(TestCase):
         self.assertEqual(user.email, 'test@example.com')
         self.assertTrue(user.check_password('testpass123'))
 
+

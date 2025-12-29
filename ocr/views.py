@@ -51,3 +51,4 @@ def devoir_detail(request, devoir_id):
     devoir = Devoir.objects.get(id=devoir_id, user=request.user)
     return render(request, 'ocr/devoir_detail.html', {'devoir': devoir})
 
+

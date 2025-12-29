@@ -53,3 +53,4 @@ class TranslationService:
             return self.DICTIONNAIRE[mot_lower]
         return None
 
+

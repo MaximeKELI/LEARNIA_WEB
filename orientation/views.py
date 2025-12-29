@@ -68,3 +68,4 @@ def metiers(request):
     metiers = Metier.objects.all()
     return render(request, 'orientation/metiers.html', {'metiers': metiers})
 
+

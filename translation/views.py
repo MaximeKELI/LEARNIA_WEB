@@ -53,3 +53,4 @@ def dictionary(request):
     mots = list(service.DICTIONNAIRE.keys())
     return render(request, 'translation/dictionary.html', {'mots': mots})
 
+

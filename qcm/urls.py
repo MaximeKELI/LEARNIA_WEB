@@ -10,3 +10,4 @@ urlpatterns = [
     path('<int:qcm_id>/submit/', views.submit_qcm, name='submit'),
 ]
 
+

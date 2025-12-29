@@ -30,3 +30,4 @@ class LeaderboardAdmin(admin.ModelAdmin):
     list_display = ['user', 'position', 'score', 'periode', 'date']
     list_filter = ['periode', 'date']
 
+

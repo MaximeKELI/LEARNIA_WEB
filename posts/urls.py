@@ -8,3 +8,4 @@ urlpatterns = [
     path('<int:post_id>/', views.post_detail, name='detail'),
 ]
 
+

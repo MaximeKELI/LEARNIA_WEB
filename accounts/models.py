@@ -68,3 +68,4 @@ class Chapitre(models.Model):
     def __str__(self):
         return f"{self.matiere.nom} - {self.titre}"
 
+

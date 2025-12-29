@@ -6,6 +6,7 @@ __pycache__/
 .Python
 env/
 venv/
+learnia_venv/
 ENV/
 build/
 develop-eggs/
@@ -45,4 +46,5 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
 

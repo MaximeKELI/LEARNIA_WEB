@@ -100,3 +100,4 @@ As-tu une question plus précise sur ce sujet ?"""
         
         return base
 
+

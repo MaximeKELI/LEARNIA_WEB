@@ -9,3 +9,4 @@ urlpatterns = [
     path('dictionary/', views.dictionary, name='dictionary'),
 ]
 
+

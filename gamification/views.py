@@ -61,3 +61,4 @@ def badges_list(request):
         'badges_data': badges_data,
     })
 
+

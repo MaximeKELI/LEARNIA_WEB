@@ -191,3 +191,4 @@ class FichesViewsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
 
+

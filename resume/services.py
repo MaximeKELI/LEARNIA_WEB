@@ -65,3 +65,4 @@ class ResumeService:
         
         return points[:5]  # Retourner max 5 points
 
+

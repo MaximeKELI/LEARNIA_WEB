@@ -52,3 +52,4 @@ def resume_detail(request, resume_id):
     resume = Resume.objects.get(id=resume_id, user=request.user)
     return render(request, 'resume/detail.html', {'resume': resume})
 
+

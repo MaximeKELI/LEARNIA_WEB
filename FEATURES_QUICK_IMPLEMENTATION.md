@@ -270,3 +270,4 @@ class Badge(models.Model):
 
 Ces fonctionnalités peuvent être implémentées progressivement selon les priorités et les retours utilisateurs.
 
+

@@ -8,3 +8,4 @@ urlpatterns = [
     path('matiere/<int:matiere_id>/', views.performance_detail, name='performance_detail'),
 ]
 
+

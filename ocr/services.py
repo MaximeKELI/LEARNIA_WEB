@@ -74,3 +74,4 @@ class OCRService:
             'commentaires': ' '.join(commentaires)
         }
 
+

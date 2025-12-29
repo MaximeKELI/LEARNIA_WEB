@@ -117,3 +117,4 @@ class Command(BaseCommand):
             self.style.SUCCESS(f'\n✓ {created} nouveau(x) badge(s) créé(s)')
         )
 
+

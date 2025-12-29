@@ -73,3 +73,4 @@ class Revision(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.flashcard.recto[:30]} - {('✓' if self.reussie else '✗')}"
 
+

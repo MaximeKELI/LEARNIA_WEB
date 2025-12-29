@@ -258,3 +258,4 @@ class IntegrationWorkflowTest(TestCase):
         event = EvenementScolaire.objects.get(titre='Examen de Math')
         self.assertEqual(event.matiere, self.matiere)
 
+

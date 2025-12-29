@@ -6,16 +6,15 @@ from .models import Post
 
 def posts_list(request):
     """Affiche la liste des posts publics"""
+    from django.db.models import Q
+    
+    now = timezone.now()
     posts = Post.objects.filter(
         publique=True
     ).filter(
-        date_expiration__gte=timezone.now()
-    ) | Post.objects.filter(
-        publique=True,
-        date_expiration__isnull=True
-    )
+        Q(date_expiration__gte=now) | Q(date_expiration__isnull=True)
+    ).order_by('-prioritaire', '-date_publication')
     
-    posts = posts.order_by('-prioritaire', '-date_publication')
     return render(request, 'posts/list.html', {'posts': posts})
 
 

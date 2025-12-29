@@ -10,3 +10,4 @@ urlpatterns = [
     path('<int:event_id>/delete/', views.event_delete, name='delete'),
 ]
 
+

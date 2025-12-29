@@ -140,3 +140,4 @@ class QCMGenerator:
             'choix': choix
         }
 
+

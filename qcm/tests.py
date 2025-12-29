@@ -231,3 +231,4 @@ class QCMViewsTest(TestCase):
         # Vérifier que le résultat est créé
         self.assertTrue(ResultatQCM.objects.filter(qcm=qcm).exists())
 
+

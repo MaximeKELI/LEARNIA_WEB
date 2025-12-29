@@ -11,3 +11,4 @@ urlpatterns = [
     path('generate/', views.generate_plan, name='generate_plan'),
 ]
 
+

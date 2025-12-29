@@ -157,3 +157,4 @@ class CalendarViewsTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(EvenementScolaire.objects.filter(id=evenement.id).exists())
 
+

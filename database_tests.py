@@ -348,3 +348,4 @@ class DatabaseDataIntegrityTest(TestCase):
         self.assertEqual(flashcard.nombre_revisions, 0)
         self.assertEqual(flashcard.nombre_success, 0)
 
+

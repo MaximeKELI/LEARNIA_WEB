@@ -9,3 +9,4 @@ urlpatterns = [
     path('<int:resume_id>/', views.resume_detail, name='detail'),
 ]
 
+

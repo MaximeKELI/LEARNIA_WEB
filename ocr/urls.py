@@ -9,3 +9,4 @@ urlpatterns = [
     path('<int:devoir_id>/', views.devoir_detail, name='devoir_detail'),
 ]
 
+

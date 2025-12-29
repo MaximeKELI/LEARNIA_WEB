@@ -225,3 +225,4 @@ class FrontendErrorHandlingTest(TestCase):
         # (vérifié via la redirection)
         self.assertEqual(response.status_code, 302)
 
+

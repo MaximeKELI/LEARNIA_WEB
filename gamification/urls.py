@@ -8,3 +8,4 @@ urlpatterns = [
     path('badges/', views.badges_list, name='badges'),
 ]
 
+

@@ -136,3 +136,4 @@
 
 Tous les fichiers d'authentification ont été vérifiés et corrigés. Les fonctionnalités sont prêtes à être testées. Les templates sont indépendants et fonctionnent sans dépendances supplémentaires.
 
+

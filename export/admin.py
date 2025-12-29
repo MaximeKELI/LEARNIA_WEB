@@ -41,3 +41,4 @@ def export_selected_users_pdf(modeladmin, request, queryset):
     return response
 export_selected_users_pdf.short_description = "Exporter rapports PDF"
 
+

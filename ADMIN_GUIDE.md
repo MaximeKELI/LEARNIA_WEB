@@ -285,3 +285,4 @@ Ce guide décrit toutes les fonctionnalités disponibles dans l'interface d'admi
 - Les dates sont toujours affichées avec la hiérarchie pour faciliter la navigation
 - Les relations sont optimisées avec `select_related` pour de meilleures performances
 
+

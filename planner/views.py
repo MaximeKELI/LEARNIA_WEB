@@ -123,3 +123,4 @@ def generate_plan(request):
     examens = Examen.objects.filter(user=request.user, date_examen__gte=timezone.now())
     return render(request, 'planner/generate_plan.html', {'examens': examens})
 
+
