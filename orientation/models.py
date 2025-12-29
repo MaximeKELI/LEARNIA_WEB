@@ -49,7 +49,7 @@ class Metier(models.Model):
     """Métiers"""
     nom = models.CharField(max_length=200)
     description = models.TextField()
-    filieres = models.ManyToManyField(Filiere, related_name='metiers')
+    filieres = models.ManyToManyField(Filiere, related_name='metiers_liste')
     competences = models.JSONField(default=list)
     formation_requise = models.TextField(blank=True)
 
