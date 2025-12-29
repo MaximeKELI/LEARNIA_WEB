@@ -85,35 +85,58 @@ Réponds en français, de manière pédagogique et bienveillante."""
         if not response:
             return None
         
-        # Parser la réponse
+            # Parser la réponse
         try:
+            import re
             note = None
             commentaires = response
             
-            # Extraire la note si présente
-            if 'NOTE:' in response or 'note:' in response:
-                import re
-                note_match = re.search(r'(?:NOTE|note):\s*(\d+(?:\.\d+)?)/20', response, re.IGNORECASE)
+            # Extraire la note si présente (plusieurs formats possibles)
+            note_patterns = [
+                r'(?:NOTE|note|Note):\s*(\d+(?:\.\d+)?)\s*/?\s*20',
+                r'(\d+(?:\.\d+)?)\s*/20',
+                r'note\s*[:\-]?\s*(\d+(?:\.\d+)?)',
+            ]
+            
+            for pattern in note_patterns:
+                note_match = re.search(pattern, response, re.IGNORECASE)
                 if note_match:
-                    note = int(float(note_match.group(1)))
-                    # Extraire les commentaires
-                    commentaires_match = re.search(r'COMMENTAIRES?:\s*(.+)$', response, re.IGNORECASE | re.DOTALL)
-                    if commentaires_match:
-                        commentaires = commentaires_match.group(1).strip()
+                    try:
+                        note = int(float(note_match.group(1)))
+                        break
+                    except (ValueError, IndexError):
+                        continue
+            
+            # Extraire les commentaires si format structuré
+            commentaires_patterns = [
+                r'COMMENTAIRES?:\s*(.+?)(?:\n\n|\Z)',
+                r'Commentaires?:\s*(.+?)(?:\n\n|\Z)',
+                r'ANALYSE:\s*(.+?)(?:\n\n|\Z)',
+            ]
+            
+            for pattern in commentaires_patterns:
+                commentaires_match = re.search(pattern, response, re.IGNORECASE | re.DOTALL)
+                if commentaires_match:
+                    commentaires = commentaires_match.group(1).strip()
+                    break
             
             # Si pas de note trouvée, essayer de l'estimer depuis le texte
             if note is None:
-                # Analyse basique pour estimer une note
                 note = self._estimate_note_from_text(response)
+            
+            # Nettoyer les commentaires (enlever les préfixes de note si présents)
+            if note is not None:
+                commentaires = re.sub(r'(?:NOTE|note|Note):\s*\d+.*?\n', '', commentaires, flags=re.IGNORECASE)
             
             return {
                 'note': max(0, min(20, note)),
-                'commentaires': commentaires
+                'commentaires': commentaires.strip()
             }
         except Exception as e:
-            # En cas d'erreur de parsing, retourner la réponse brute
+            # En cas d'erreur de parsing, retourner la réponse brute avec note estimée
+            note = self._estimate_note_from_text(response)
             return {
-                'note': 10,  # Note par défaut
+                'note': max(0, min(20, note)),
                 'commentaires': response
             }
     
