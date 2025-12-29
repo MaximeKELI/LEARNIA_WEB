@@ -24,12 +24,18 @@ if __name__ == "__main__":
         'qcm',
         'flashcards',
         'tutor',
+        'gamification',
+        'notes',
+        'calendar_app',
+        'fiches',
+        'export',
     ]
     
     # Tests spécifiques
     specific_tests = [
         'frontend_tests',
         'database_tests',
+        'integration_tests',
     ]
     
     all_tests = apps_to_test + specific_tests
