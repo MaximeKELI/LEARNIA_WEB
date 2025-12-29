@@ -12,6 +12,11 @@
         <a href="{% url 'flashcards:review_deck' deck.id %}" class="btn btn-success">
             <i class="bi bi-arrow-repeat"></i> Réviser
         </a>
+        {% if deck.flashcards.count > 0 %}
+        <a href="{% url 'fiches:from_deck' deck.id %}" class="btn btn-info">
+            <i class="bi bi-file-earmark-pdf"></i> Générer Fiche PDF
+        </a>
+        {% endif %}
     </div>
 </div>
 

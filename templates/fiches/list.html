@@ -17,11 +17,16 @@
     </div>
     <div class="card-body">
         <p>Générez une fiche depuis un chapitre ou un deck de flashcards :</p>
-        <a href="{% url 'accounts:chapitre' %}" class="btn btn-outline-primary">
-            <i class="bi bi-book"></i> Depuis un chapitre
+        <p class="text-muted small">
+            <i class="bi bi-info-circle"></i> 
+            Lors de la création d'une fiche, vous pouvez sélectionner un chapitre dans la liste déroulante.
+            Pour générer une fiche depuis un deck de flashcards, rendez-vous sur la page du deck.
+        </p>
+        <a href="{% url 'fiches:create' %}" class="btn btn-outline-primary">
+            <i class="bi bi-plus-circle"></i> Créer une fiche avec chapitre
         </a>
         <a href="{% url 'flashcards:index' %}" class="btn btn-outline-primary">
-            <i class="bi bi-card-text"></i> Depuis un deck
+            <i class="bi bi-card-text"></i> Voir mes decks
         </a>
     </div>
 </div>
