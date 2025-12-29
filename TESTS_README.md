@@ -11,6 +11,17 @@ Tests pour les fonctionnalités backend de chaque application :
 - **Services** : Logique métier
 - **Formulaires** : Validation des données
 
+**Applications testées** :
+- `accounts/tests.py` - Utilisateurs, matières, chapitres
+- `qcm/tests.py` - QCM, questions, choix, résultats
+- `flashcards/tests.py` - Decks, flashcards, révisions, système Leitner
+- `tutor/tests.py` - Conversations, messages, service tuteur
+- `gamification/tests.py` - Badges, XP, progression, classements (NOUVEAU)
+- `notes/tests.py` - Notes personnelles, tags, versions (NOUVEAU)
+- `calendar_app/tests.py` - Événements scolaires, calendrier (NOUVEAU)
+- `fiches/tests.py` - Fiches de révision, génération PDF (NOUVEAU)
+- `export/tests.py` - Export CSV/PDF, import CSV (NOUVEAU)
+
 ### Tests Frontend (`frontend_tests.py`)
 Tests pour l'interface utilisateur :
 - **Templates** : Structure HTML, éléments présents
@@ -25,6 +36,12 @@ Tests pour l'intégrité de la base de données :
 - **Transactions** : Rollback, atomicité
 - **Intégrité** : Valeurs par défaut, contraintes
 
+### Tests d'Intégration (`integration_tests.py`)
+Tests pour vérifier que les fonctionnalités travaillent ensemble :
+- **Gamification intégrée** : Vérification que QCM/flashcards/tuteur déclenchent XP
+- **Workflows complets** : Sessions d'étude complètes
+- **Intégrations calendrier** : Association avec examens et matières
+
 ## 🚀 Exécution des Tests
 
 ### Tous les tests
@@ -37,6 +54,11 @@ python manage.py test
 python manage.py test accounts
 python manage.py test qcm
 python manage.py test flashcards
+python manage.py test gamification
+python manage.py test notes
+python manage.py test calendar_app
+python manage.py test fiches
+python manage.py test export
 ```
 
 ### Tests frontend
