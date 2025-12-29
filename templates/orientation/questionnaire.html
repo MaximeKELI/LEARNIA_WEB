@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block title %}Questionnaire d'Orientation - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-clipboard-check"></i> Questionnaire d'Orientation Scolaire</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Répondez aux questions suivantes pour découvrir quelle filière vous correspond le mieux.</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <h5>1. Intérêts et Préférences</h5>
+                        <div class="mb-3">
+                            <label class="form-label">À quel point aimez-vous les mathématiques ?</label>
+                            <select class="form-select" name="question_math" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">À quel point aimez-vous les sciences (physique, chimie, biologie) ?</label>
+                            <select class="form-select" name="question_science" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">À quel point aimez-vous la littérature et le français ?</label>
+                            <select class="form-select" name="question_litterature" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>2. Compétences et Talents</h5>
+                        <div class="mb-3">
+                            <label class="form-label">À quel point êtes-vous doué(e) en calcul et résolution de problèmes ?</label>
+                            <select class="form-select" name="question_calcul" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">À quel point êtes-vous doué(e) en expression écrite et orale ?</label>
+                            <select class="form-select" name="question_expression" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h5>3. Activités Préférées</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Préférez-vous le travail manuel et technique ?</label>
+                            <select class="form-select" name="question_manuel" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Vous intéressez-vous au commerce et à la gestion ?</label>
+                            <select class="form-select" name="question_commerce" required>
+                                <option value="">Sélectionnez une réponse</option>
+                                <option value="1">Pas du tout</option>
+                                <option value="2">Un peu</option>
+                                <option value="3">Moyennement</option>
+                                <option value="4">Beaucoup</option>
+                                <option value="5">Énormément</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle"></i> Soumettre le Questionnaire
+                        </button>
+                        <a href="{% url 'orientation:index' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Retour
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
