@@ -25,6 +25,7 @@ urlpatterns = [
     path('notes/', include('notes.urls')),
     path('calendrier/', include('calendar_app.urls')),
     path('fiches/', include('fiches.urls')),
+    path('posts/', include('posts.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ post.titre }} - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.titre }}" style="max-height: 400px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h2 class="card-title">{{ post.titre }}</h2>
+                    <span class="badge {{ post.get_type_badge_class }}">{{ post.get_type_post_display }}</span>
+                </div>
+                
+                <div class="text-muted mb-3">
+                    <p class="mb-1">
+                        <i class="bi bi-person"></i> <strong>Auteur:</strong> {{ post.auteur.get_full_name|default:post.auteur.username }}
+                    </p>
+                    <p class="mb-1">
+                        <i class="bi bi-calendar"></i> <strong>Publié le:</strong> {{ post.date_publication|date:"d/m/Y à H:i" }}
+                    </p>
+                    {% if post.date_expiration %}
+                    <p class="mb-1">
+                        <i class="bi bi-calendar-x"></i> <strong>Expire le:</strong> {{ post.date_expiration|date:"d/m/Y à H:i" }}
+                    </p>
+                    {% endif %}
+                    {% if post.prioritaire %}
+                    <span class="badge bg-warning text-dark">
+                        <i class="bi bi-star-fill"></i> Post Prioritaire
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <hr>
+                
+                <div class="post-content">
+                    {{ post.contenu|linebreaks }}
+                </div>
+                
+                <hr>
+                
+                <a href="{% url 'posts:list' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour aux actualités
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

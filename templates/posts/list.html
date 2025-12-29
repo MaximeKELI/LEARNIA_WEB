@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Actualités - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-newspaper"></i> Actualités et Annonces</h2>
+</div>
+
+{% if posts %}
+<div class="row">
+    {% for post in posts %}
+    {% if post.is_active %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 {% if post.prioritaire %}border-warning{% endif %}">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.titre }}" style="max-height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="card-title">{{ post.titre }}</h5>
+                    <span class="badge {{ post.get_type_badge_class }}">{{ post.get_type_post_display }}</span>
+                </div>
+                <p class="card-text text-muted">
+                    <small>
+                        <i class="bi bi-person"></i> {{ post.auteur.get_full_name|default:post.auteur.username }}
+                        <i class="bi bi-calendar ms-2"></i> {{ post.date_publication|date:"d/m/Y à H:i" }}
+                    </small>
+                </p>
+                <p class="card-text">
+                    {{ post.contenu|truncatewords:30 }}
+                </p>
+                {% if post.prioritaire %}
+                <span class="badge bg-warning text-dark mb-2">
+                    <i class="bi bi-star-fill"></i> Prioritaire
+                </span>
+                {% endif %}
+                <a href="{% url 'posts:detail' post.id %}" class="btn btn-primary btn-sm mt-2">
+                    Lire la suite <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Aucune actualité pour le moment.
+</div>
+{% endif %}
+{% endblock %}
+

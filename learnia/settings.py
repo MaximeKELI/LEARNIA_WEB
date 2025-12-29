@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'notes',
     'calendar_app',
     'fiches',
+    'posts',
 ]
 
 MIDDLEWARE = [
