@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Métiers - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-briefcase"></i> Métiers</h2>
+    <a href="{% url 'orientation:index' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour
+    </a>
+</div>
+
+{% if metiers %}
+<div class="row">
+    {% for metier in metiers %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-briefcase-fill"></i> {{ metier.nom }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>{{ metier.description }}</p>
+                
+                {% if metier.filieres.all %}
+                <div class="mb-3">
+                    <strong>Filières associées :</strong>
+                    <div class="mt-2">
+                        {% for filiere in metier.filieres.all %}
+                        <span class="badge bg-primary me-1">{{ filiere.nom }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if metier.competences %}
+                <div class="mb-3">
+                    <strong>Compétences requises :</strong>
+                    <ul class="list-unstyled mt-2">
+                        {% for competence in metier.competences %}
+                        <li><i class="bi bi-star text-warning"></i> {{ competence }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
+                {% if metier.formation_requise %}
+                <div>
+                    <strong>Formation requise :</strong>
+                    <p class="mt-2 mb-0">{{ metier.formation_requise }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Aucun métier disponible pour le moment.
+</div>
+{% endif %}
+{% endblock %}
+
