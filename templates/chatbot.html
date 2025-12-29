@@ -10,13 +10,15 @@
     <!-- Fenêtre de chat -->
     <div id="chatbot-window" class="chatbot-window">
         <div class="chatbot-header">
-            <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center">
                 <div class="chatbot-avatar">
                     <i class="bi bi-robot"></i>
                 </div>
                 <div class="ms-2">
                     <h6 class="mb-0">Tuteur IA Learnia</h6>
-                    <small class="text-muted" id="chatbot-status">En ligne</small>
+                    <small class="text-muted" id="chatbot-status">
+                        <span class="status-dot"></span> En ligne
+                    </small>
                 </div>
             </div>
             <button id="chatbot-close" class="btn btn-sm btn-link text-white" aria-label="Fermer">
@@ -90,11 +92,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .chatbot-toggle:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) translateY(-5px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    animation: none;
 }
 
 .chatbot-toggle:active {
@@ -140,6 +153,16 @@
 
 .chatbot-window.active {
     display: flex;
+    animation: slideUp 0.3s ease-out, fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
@@ -231,12 +254,14 @@
     background: white;
     color: #333;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 4px;
 }
 
 .chatbot-bubble-user {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     box-shadow: 0 2px 5px rgba(102, 126, 234, 0.3);
+    border-top-right-radius: 4px;
 }
 
 .chatbot-bubble p {
@@ -361,6 +386,51 @@
 
 .chatbot-messages::-webkit-scrollbar-thumb:hover {
     background: #999;
+}
+
+/* Status dot */
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #28a745;
+    margin-right: 5px;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.8);
+    }
+}
+
+/* Amélioration des animations de messages */
+.chatbot-message {
+    animation: messageSlide 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.chatbot-bubble {
+    animation: bubblePop 0.3s ease-out;
+}
+
+@keyframes bubblePop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* Responsive */
