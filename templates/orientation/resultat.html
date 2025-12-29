@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Résultat d'Orientation - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4><i class="bi bi-trophy"></i> Résultats de votre Questionnaire</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h5 class="alert-heading">
+                        <i class="bi bi-star-fill"></i> Filière Suggérée
+                    </h5>
+                    <h3 class="mb-0">{{ questionnaire.filiere_suggeree }}</h3>
+                    <small class="text-muted">
+                        <i class="bi bi-calendar"></i> Complété le {{ questionnaire.created_at|date:"d/m/Y à H:i" }}
+                    </small>
+                </div>
+                
+                <!-- Scores -->
+                <div class="mb-4">
+                    <h5>Scores par Filière</h5>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6 class="text-info">Scientifique</h6>
+                                    <h3>{{ questionnaire.score_scientifique }}</h3>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-info" role="progressbar" 
+                                             style="width: {% widthratio questionnaire.score_scientifique 20 100 %}%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6 class="text-success">Littéraire</h6>
+                                    <h3>{{ questionnaire.score_litteraire }}</h3>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" 
+                                             style="width: {% widthratio questionnaire.score_litteraire 20 100 %}%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6 class="text-warning">Commercial</h6>
+                                    <h3>{{ questionnaire.score_commercial }}</h3>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-warning" role="progressbar" 
+                                             style="width: {% widthratio questionnaire.score_commercial 20 100 %}%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h6 class="text-secondary">Technique</h6>
+                                    <h3>{{ questionnaire.score_technique }}</h3>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-secondary" role="progressbar" 
+                                             style="width: {% widthratio questionnaire.score_technique 20 100 %}%">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Métiers suggérés -->
+                {% if questionnaire.metiers_suggestes %}
+                <div class="mb-4">
+                    <h5><i class="bi bi-briefcase"></i> Métiers Suggérés</h5>
+                    <div class="row">
+                        {% for metier in questionnaire.metiers_suggestes %}
+                        <div class="col-md-4 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-check-circle text-success"></i> {{ metier }}
+                                    </h6>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{% url 'orientation:questionnaire' %}" class="btn btn-primary">
+                        <i class="bi bi-arrow-clockwise"></i> Refaire le Questionnaire
+                    </a>
+                    <a href="{% url 'orientation:index' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
