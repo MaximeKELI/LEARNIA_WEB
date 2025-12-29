@@ -30,18 +30,19 @@ Génère des résumés :
 - Adaptés au niveau scolaire
 - En français, avec un langage accessible"""
         
-        prompt = f"""Résume le texte suivant en maximum {longueur_max} mots, en capturant les points essentiels et les concepts clés.
+        prompt = f"""Résume le texte suivant en EXACTEMENT {longueur_max // 10} phrases maximum (environ {longueur_max} caractères), en capturant les points essentiels et les concepts clés.
+
+IMPORTANT : Réponds directement avec le résumé, sans introduction ni conclusion. Commence directement par le contenu du résumé.
 
 TEXTE :
 {texte[:3000]}  # Limiter la longueur
 
-Génère un résumé concis et pédagogique."""
+Génère un résumé concis et pédagogique, directement sans préambule."""
         
         response = GeminiService.generate_text(
             prompt=prompt,
             system_instruction=system_instruction,
-            temperature=0.3,  # Température plus basse pour des résumés plus factuels
-            max_tokens=longueur_max * 2  # Approximativement 2 tokens par mot
+            temperature=0.3  # Température plus basse pour des résumés plus factuels
         )
         
         if response:

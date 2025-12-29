@@ -29,10 +29,28 @@ class GeminiService:
         
         try:
             genai.configure(api_key=api_key)
-            # Utiliser le modèle gemini-pro (gratuit et performant)
-            cls._model = genai.GenerativeModel('gemini-pro')
+            # Essayer les modèles disponibles dans l'ordre de préférence
+            model_names = [
+                'gemini-2.5-flash',      # Plus récent, rapide et gratuit
+                'gemini-2.0-flash',      # Alternative récente
+                'gemini-1.5-flash',      # Ancien mais stable
+                'gemini-1.5-pro',        # Plus performant mais peut être payant
+            ]
+            
+            cls._model = None
+            for model_name in model_names:
+                try:
+                    cls._model = genai.GenerativeModel(model_name)
+                    logger.info(f"Gemini API initialisée avec le modèle: {model_name}")
+                    break
+                except Exception as e:
+                    logger.debug(f"Modèle {model_name} non disponible: {e}")
+                    continue
+            
+            if not cls._model:
+                raise Exception("Aucun modèle Gemini disponible")
+            
             cls._initialized = True
-            logger.info("Gemini API initialisée avec succès")
         except Exception as e:
             logger.error(f"Erreur lors de l'initialisation de Gemini: {e}")
             cls._initialized = True  # Marquer comme initialisé pour éviter les tentatives répétées

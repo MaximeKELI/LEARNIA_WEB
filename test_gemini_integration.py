@@ -77,7 +77,8 @@ def test_tuteur_service():
         matiere, _ = Matiere.objects.get_or_create(nom='Sciences')
         chapitre, _ = Chapitre.objects.get_or_create(
             titre='La Photosynthèse',
-            matiere=matiere
+            matiere=matiere,
+            defaults={'numero': 1, 'description': 'Chapitre sur la photosynthèse'}
         )
         
         question2 = "Explique-moi comment fonctionne la photosynthèse"
@@ -161,7 +162,7 @@ def test_resume_service():
     
     if resume:
         print(f"✓ Résumé généré ({len(resume)} caractères)")
-        print(f"Résumé: {resume}")
+        print(f"Résumé: {resume[:300]}{'...' if len(resume) > 300 else ''}")
         return True
     else:
         print("✗ Aucun résumé généré")
