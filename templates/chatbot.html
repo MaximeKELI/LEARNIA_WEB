@@ -531,13 +531,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chatbot-message chatbot-message-${role}`;
         
+        // Formater le texte (retours à la ligne, markdown basique)
+        const formattedText = formatMessage(text);
+        
         if (role === 'bot') {
             messageDiv.innerHTML = `
                 <div class="chatbot-avatar-small">
                     <i class="bi bi-robot"></i>
                 </div>
                 <div class="chatbot-bubble chatbot-bubble-bot">
-                    <p>${escapeHtml(text)}</p>
+                    ${formattedText}
                 </div>
             `;
         } else {
@@ -550,6 +553,34 @@ document.addEventListener('DOMContentLoaded', function() {
         
         chatbotMessages.appendChild(messageDiv);
         scrollToBottom();
+    }
+    
+    function formatMessage(text) {
+        // Échapper le HTML
+        let formatted = escapeHtml(text);
+        
+        // Convertir les retours à la ligne en <br>
+        formatted = formatted.replace(/\n/g, '<br>');
+        
+        // Convertir **texte** en <strong>texte</strong>
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        
+        // Convertir *texte* en <em>texte</em>
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        
+        // Convertir les listes numérotées
+        formatted = formatted.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+        if (formatted.includes('<li>')) {
+            formatted = '<ol>' + formatted + '</ol>';
+        }
+        
+        // Convertir les listes à puces
+        formatted = formatted.replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>');
+        if (formatted.includes('<li>') && !formatted.includes('<ol>')) {
+            formatted = '<ul>' + formatted + '</ul>';
+        }
+        
+        return '<p>' + formatted + '</p>';
     }
     
     function showTyping() {
