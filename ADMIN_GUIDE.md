@@ -286,3 +286,4 @@ Ce guide décrit toutes les fonctionnalités disponibles dans l'interface d'admi
 - Les relations sont optimisées avec `select_related` pour de meilleures performances
 
 
+

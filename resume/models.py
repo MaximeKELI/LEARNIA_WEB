@@ -23,3 +23,4 @@ class Resume(models.Model):
         return self.titre
 
 
+

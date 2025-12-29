@@ -6,3 +6,4 @@ class AnalyticsConfig(AppConfig):
     name = 'analytics'
 
 
+

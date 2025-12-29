@@ -147,3 +147,4 @@ Puis testez les fonctionnalités :
 
 Toutes ces fonctionnalités utilisent maintenant Gemini AI ! 🎉
 
+

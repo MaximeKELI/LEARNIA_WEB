@@ -6,3 +6,4 @@ class ResumeConfig(AppConfig):
     name = 'resume'
 
 
+

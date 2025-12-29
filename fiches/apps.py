@@ -6,3 +6,4 @@ class FichesConfig(AppConfig):
     name = 'fiches'
 
 
+

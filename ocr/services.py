@@ -1,6 +1,6 @@
 """
 Service OCR pour la reconnaissance de devoirs manuscrits
-Mode hors ligne avec Tesseract
+Utilise Tesseract et Gemini AI pour l'analyse
 """
 try:
     import pytesseract
@@ -8,6 +8,8 @@ try:
     OCR_AVAILABLE = True
 except ImportError:
     OCR_AVAILABLE = False
+
+from learnia.gemini_service import GeminiService
 
 
 class OCRService:
@@ -39,9 +41,101 @@ class OCRService:
         
         return texte
     
-    def analyze_homework(self, texte):
-        """Analyse un devoir et donne une note (simulation)"""
-        # Simulation d'analyse
+    def analyze_homework(self, texte, image_path=None, matiere=None):
+        """Analyse un devoir et donne une note avec Gemini AI"""
+        # Essayer d'abord avec Gemini si une image est fournie
+        if image_path and GeminiService.is_available():
+            analyse = self._analyze_with_gemini(image_path, matiere)
+            if analyse:
+                return analyse
+        
+        # Fallback vers l'analyse basique basée sur le texte
+        return self._analyze_basic(texte)
+    
+    def _analyze_with_gemini(self, image_path, matiere=None):
+        """Analyse un devoir avec Gemini AI en utilisant l'image"""
+        system_instruction = """Tu es un professeur expérimenté qui corrige des devoirs d'élèves togolais.
+        
+Ton rôle est de :
+- Analyser le devoir manuscrit dans l'image
+- Identifier les réponses correctes et incorrectes
+- Donner une note sur 20
+- Fournir des commentaires constructifs et encourageants
+- Adapter ton analyse au niveau scolaire (primaire à terminale)
+
+Réponds en français, de manière pédagogique et bienveillante."""
+        
+        prompt = f"""Analyse ce devoir manuscrit et fournis :
+1. Une note sur 20 (justifie ta notation)
+2. Des commentaires détaillés sur :
+   - Les points forts
+   - Les erreurs identifiées
+   - Des suggestions d'amélioration
+   - Des encouragements
+
+"""
+        
+        if matiere:
+            prompt += f"Matière : {matiere}\n\n"
+        
+        prompt += "Format ta réponse ainsi :\nNOTE: [note]/20\n\nCOMMENTAIRES:\n[tes commentaires détaillés]"
+        
+        response = GeminiService.analyze_image(image_path, prompt, system_instruction)
+        
+        if not response:
+            return None
+        
+        # Parser la réponse
+        try:
+            note = None
+            commentaires = response
+            
+            # Extraire la note si présente
+            if 'NOTE:' in response or 'note:' in response:
+                import re
+                note_match = re.search(r'(?:NOTE|note):\s*(\d+(?:\.\d+)?)/20', response, re.IGNORECASE)
+                if note_match:
+                    note = int(float(note_match.group(1)))
+                    # Extraire les commentaires
+                    commentaires_match = re.search(r'COMMENTAIRES?:\s*(.+)$', response, re.IGNORECASE | re.DOTALL)
+                    if commentaires_match:
+                        commentaires = commentaires_match.group(1).strip()
+            
+            # Si pas de note trouvée, essayer de l'estimer depuis le texte
+            if note is None:
+                # Analyse basique pour estimer une note
+                note = self._estimate_note_from_text(response)
+            
+            return {
+                'note': max(0, min(20, note)),
+                'commentaires': commentaires
+            }
+        except Exception as e:
+            # En cas d'erreur de parsing, retourner la réponse brute
+            return {
+                'note': 10,  # Note par défaut
+                'commentaires': response
+            }
+    
+    def _estimate_note_from_text(self, texte):
+        """Estime une note depuis le texte d'analyse"""
+        texte_lower = texte.lower()
+        score = 10  # Score de base
+        
+        # Mots-clés positifs
+        if any(mot in texte_lower for mot in ['excellent', 'parfait', 'très bien', 'bravo']):
+            score = 18
+        elif any(mot in texte_lower for mot in ['bon', 'bien', 'correct', 'satisfaisant']):
+            score = 14
+        elif any(mot in texte_lower for mot in ['moyen', 'acceptable', 'passable']):
+            score = 10
+        elif any(mot in texte_lower for mot in ['faible', 'insuffisant', 'erreurs']):
+            score = 6
+        
+        return score
+    
+    def _analyze_basic(self, texte):
+        """Analyse basique basée sur le texte (fallback)"""
         mots_cles_positifs = ['bon', 'excellent', 'correct', 'bien', 'compris']
         mots_cles_negatifs = ['erreur', 'faux', 'incorrect', 'pas']
         
@@ -73,5 +167,6 @@ class OCRService:
             'note': round(note),
             'commentaires': ' '.join(commentaires)
         }
+
 
 

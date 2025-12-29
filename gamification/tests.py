@@ -189,3 +189,4 @@ class GamificationViewsTest(TestCase):
         self.assertTemplateUsed(response, 'gamification/badges.html')
 
 
+

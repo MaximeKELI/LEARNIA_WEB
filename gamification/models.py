@@ -132,3 +132,4 @@ class Leaderboard(models.Model):
         return f"{self.user.username} - {self.position}ème ({self.periode})"
 
 
+

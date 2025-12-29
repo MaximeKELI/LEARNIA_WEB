@@ -337,3 +337,4 @@ class AccountsFormsTest(TestCase):
         self.assertTrue(user.check_password('testpass123'))
 
 
+

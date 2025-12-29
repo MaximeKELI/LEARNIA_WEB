@@ -72,3 +72,4 @@ Puis testez dans l'interface :
 
 Toutes ces fonctionnalités utilisent maintenant Gemini AI ! 🎉
 
+

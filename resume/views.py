@@ -53,3 +53,4 @@ def resume_detail(request, resume_id):
     return render(request, 'resume/detail.html', {'resume': resume})
 
 
+

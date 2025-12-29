@@ -41,3 +41,4 @@ class Dictionnaire(models.Model):
         return self.mot_francais
 
 
+

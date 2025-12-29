@@ -6,3 +6,4 @@ class FlashcardsConfig(AppConfig):
     name = 'flashcards'
 
 
+

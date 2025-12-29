@@ -176,3 +176,4 @@ class NotesViewsTest(TestCase):
         self.assertTrue(note.favori)
 
 
+

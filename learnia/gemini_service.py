@@ -164,4 +164,47 @@ class GeminiService:
         except Exception as e:
             logger.error(f"Erreur lors du chat avec Gemini: {e}")
             return None
+    
+    @classmethod
+    def analyze_image(cls, image_path, prompt, system_instruction=None):
+        """
+        Analyse une image avec Gemini (vision)
+        
+        Args:
+            image_path: Chemin vers l'image à analyser
+            prompt: Le prompt pour l'analyse
+            system_instruction: Instruction système (optionnel)
+        
+        Returns:
+            str: L'analyse générée, ou None en cas d'erreur
+        """
+        cls._initialize()
+        
+        if not cls._model:
+            logger.warning("Gemini non disponible pour l'analyse d'image")
+            return None
+        
+        try:
+            import PIL.Image
+            
+            # Charger l'image
+            image = PIL.Image.open(image_path)
+            
+            # Construire le prompt complet
+            full_prompt = prompt
+            if system_instruction:
+                full_prompt = f"{system_instruction}\n\n{prompt}"
+            
+            # Générer la réponse avec l'image
+            response = cls._model.generate_content([full_prompt, image])
+            
+            if response and response.text:
+                return response.text.strip()
+            else:
+                logger.warning("Réponse Gemini vide pour l'image")
+                return None
+                
+        except Exception as e:
+            logger.error(f"Erreur lors de l'analyse d'image avec Gemini: {e}")
+            return None
 

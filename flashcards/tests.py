@@ -192,3 +192,4 @@ class FlashcardsViewsTest(TestCase):
         self.assertTrue(Flashcard.objects.filter(recto='Question ?').exists())
 
 
+

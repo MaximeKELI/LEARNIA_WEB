@@ -495,3 +495,4 @@ class DataIntegrityTest(TestCase):
         self.assertEqual(fiche.chapitre.matiere, matiere)
 
 
+

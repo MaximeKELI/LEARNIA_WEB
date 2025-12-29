@@ -69,3 +69,4 @@ class Chapitre(models.Model):
         return f"{self.matiere.nom} - {self.titre}"
 
 
+

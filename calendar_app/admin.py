@@ -10,3 +10,4 @@ class EvenementScolaireAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_debut'
 
 
+

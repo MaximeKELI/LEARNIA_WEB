@@ -42,3 +42,4 @@ class EvenementScolaire(models.Model):
         return f"{self.titre} - {self.date_debut}"
 
 
+

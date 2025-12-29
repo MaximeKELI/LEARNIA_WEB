@@ -33,8 +33,8 @@ def upload_devoir(request):
         
         devoir.texte_reconnu = texte_corrige
         
-        # Analyser et noter (simulation)
-        analyse = service.analyze_homework(texte_corrige)
+        # Analyser et noter avec Gemini AI (utilise l'image directement)
+        analyse = service.analyze_homework(texte_corrige, image_path=devoir.image.path, matiere=matiere)
         devoir.note = analyse['note']
         devoir.commentaires = analyse['commentaires']
         
@@ -50,5 +50,6 @@ def devoir_detail(request, devoir_id):
     """Détails d'un devoir"""
     devoir = Devoir.objects.get(id=devoir_id, user=request.user)
     return render(request, 'ocr/devoir_detail.html', {'devoir': devoir})
+
 
 

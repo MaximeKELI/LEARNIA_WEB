@@ -124,3 +124,4 @@ def generate_plan(request):
     return render(request, 'planner/generate_plan.html', {'examens': examens})
 
 
+

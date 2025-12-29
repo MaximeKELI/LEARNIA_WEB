@@ -48,3 +48,4 @@ class Activite(models.Model):
         return f"{self.user.username} - {self.type_activite}"
 
 
+

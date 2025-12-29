@@ -46,3 +46,4 @@ class NoteVersion(models.Model):
         return f"{self.note.titre} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 
 
+

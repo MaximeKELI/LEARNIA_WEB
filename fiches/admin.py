@@ -9,3 +9,4 @@ class FicheRevisionAdmin(admin.ModelAdmin):
     search_fields = ['titre', 'contenu', 'user__username']
 
 
+

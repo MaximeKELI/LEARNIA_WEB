@@ -69,3 +69,4 @@ def metiers(request):
     return render(request, 'orientation/metiers.html', {'metiers': metiers})
 
 
+

@@ -192,3 +192,4 @@ class FichesViewsTest(TestCase):
         self.assertEqual(response['Content-Type'], 'application/pdf')
 
 
+

@@ -6,3 +6,4 @@ class CalendarAppConfig(AppConfig):
     name = 'calendar_app'
 
 
+

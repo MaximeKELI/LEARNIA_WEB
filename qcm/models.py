@@ -60,3 +60,4 @@ class ResultatQCM(models.Model):
         return f"{self.user.username} - {self.qcm.titre} ({self.pourcentage}%)"
 
 
+

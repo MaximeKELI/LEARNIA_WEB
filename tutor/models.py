@@ -34,3 +34,4 @@ class Message(models.Model):
         return f"{self.role}: {self.contenu[:50]}"
 
 
+

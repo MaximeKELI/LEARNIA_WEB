@@ -349,3 +349,4 @@ class DatabaseDataIntegrityTest(TestCase):
         self.assertEqual(flashcard.nombre_success, 0)
 
 
+

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Devoir - {{ devoir.matiere }} - Learnia{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-image"></i> Image du Devoir</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if devoir.image %}
+                <img src="{{ devoir.image.url }}" alt="Devoir" class="img-fluid rounded shadow">
+                {% else %}
+                <p class="text-muted">Aucune image disponible</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-file-text"></i> Informations</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Matière :</strong>
+                    <span class="badge bg-info ms-2">{{ devoir.matiere|default:"Non spécifiée" }}</span>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Date :</strong>
+                    <span class="ms-2">{{ devoir.created_at|date:"d/m/Y à H:i" }}</span>
+                </div>
+                
+                {% if devoir.note %}
+                <div class="mb-3">
+                    <strong>Note :</strong>
+                    <span class="badge {% if devoir.note >= 16 %}bg-success{% elif devoir.note >= 12 %}bg-warning{% else %}bg-danger{% endif %} ms-2 fs-6">
+                        {{ devoir.note }}/20
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="bi bi-text-paragraph"></i> Texte Reconnu (OCR)</h5>
+            </div>
+            <div class="card-body">
+                {% if devoir.texte_reconnu %}
+                <div class="bg-light p-3 rounded" style="min-height: 200px; white-space: pre-wrap; font-family: monospace;">
+                    {{ devoir.texte_reconnu }}
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyText()">
+                        <i class="bi bi-clipboard"></i> Copier le texte
+                    </button>
+                </div>
+                {% else %}
+                <p class="text-muted">Aucun texte reconnu. L'OCR n'a pas pu extraire de texte de l'image.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if devoir.commentaires %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5><i class="bi bi-chat-left-text"></i> Commentaires et Analyse</h5>
+            </div>
+            <div class="card-body">
+                <div class="bg-light p-3 rounded">
+                    {{ devoir.commentaires|linebreaks }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{% url 'ocr:index' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour à la liste
+    </a>
+    <a href="{% url 'ocr:upload' %}" class="btn btn-primary">
+        <i class="bi bi-upload"></i> Uploader un autre devoir
+    </a>
+</div>
+
+{% block extra_js %}
+<script>
+function copyText() {
+    const text = `{{ devoir.texte_reconnu|escapejs }}`;
+    navigator.clipboard.writeText(text).then(function() {
+        alert('Texte copié dans le presse-papiers !');
+    }, function(err) {
+        console.error('Erreur lors de la copie:', err);
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}
+
+

@@ -6,3 +6,4 @@ class TranslationConfig(AppConfig):
     name = 'translation'
 
 
+

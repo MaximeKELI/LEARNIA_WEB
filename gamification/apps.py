@@ -6,3 +6,4 @@ class GamificationConfig(AppConfig):
     name = 'gamification'
 
 
+

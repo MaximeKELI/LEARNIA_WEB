@@ -53,3 +53,4 @@ class Post(models.Model):
         return classes.get(self.type_post, 'bg-secondary')
 
 
+

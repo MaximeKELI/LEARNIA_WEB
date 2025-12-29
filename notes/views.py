@@ -150,3 +150,4 @@ def note_toggle_favorite(request, note_id):
     return redirect('notes:list')
 
 
+

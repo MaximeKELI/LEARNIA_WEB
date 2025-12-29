@@ -6,3 +6,4 @@ class OcrConfig(AppConfig):
     name = 'ocr'
 
 
+

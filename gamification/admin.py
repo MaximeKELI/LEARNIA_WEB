@@ -31,3 +31,4 @@ class LeaderboardAdmin(admin.ModelAdmin):
     list_filter = ['periode', 'date']
 
 
+

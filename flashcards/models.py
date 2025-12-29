@@ -74,3 +74,4 @@ class Revision(models.Model):
         return f"{self.user.username} - {self.flashcard.recto[:30]} - {('✓' if self.reussie else '✗')}"
 
 
+

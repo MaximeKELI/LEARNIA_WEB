@@ -6,3 +6,4 @@ class NotesConfig(AppConfig):
     name = 'notes'
 
 
+

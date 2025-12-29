@@ -17,3 +17,4 @@ class NoteVersionAdmin(admin.ModelAdmin):
     search_fields = ['note__titre']
 
 
+

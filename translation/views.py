@@ -54,3 +54,4 @@ def dictionary(request):
     return render(request, 'translation/dictionary.html', {'mots': mots})
 
 
+
