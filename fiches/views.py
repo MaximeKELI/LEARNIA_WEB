@@ -58,7 +58,8 @@ def fiche_from_chapitre(request, chapitre_id):
         buffer = FichePDFGenerator.generate_from_chapitre(chapitre, request.user, titre)
         
         response = HttpResponse(buffer.read(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="fiche_{chapitre.titre.replace(' ', '_')}_{datetime.now().strftime("%Y%m%d")}.pdf"'
+        filename = f"fiche_{chapitre.titre.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
     
     return render(request, 'fiches/from_chapitre.html', {'chapitre': chapitre})
@@ -72,7 +73,8 @@ def fiche_from_deck(request, deck_id):
     buffer = FichePDFGenerator.generate_from_flashcards(deck, request.user)
     
     response = HttpResponse(buffer.read(), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="fiche_flashcards_{deck.titre.replace(' ', '_')}_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    filename = f"fiche_flashcards_{deck.titre.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 
