@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Uploader un Devoir - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-upload"></i> Uploader un Devoir Manuscrit</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Image du Devoir *</label>
+                        <input type="file" class="form-control" name="image" accept="image/*" required>
+                        <small class="form-text text-muted">
+                            Formats acceptés : JPG, PNG, GIF. Taille max recommandée : 5MB
+                        </small>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Matière</label>
+                        <input type="text" class="form-control" name="matiere" 
+                               placeholder="Ex: Mathématiques, Français, Sciences..." 
+                               list="matieres-list">
+                        <datalist id="matieres-list">
+                            <option value="Mathématiques">
+                            <option value="Français">
+                            <option value="Sciences">
+                            <option value="Histoire">
+                            <option value="Géographie">
+                            <option value="Anglais">
+                            <option value="Physique">
+                            <option value="Chimie">
+                            <option value="Biologie">
+                        </datalist>
+                        <small class="form-text text-muted">
+                            Indiquez la matière du devoir pour une meilleure analyse
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Note :</strong> La reconnaissance OCR fonctionne mieux avec :
+                        <ul class="mb-0 mt-2">
+                            <li>Une écriture claire et lisible</li>
+                            <li>Une image de bonne qualité (haute résolution)</li>
+                            <li>Un bon éclairage et contraste</li>
+                            <li>Une image droite (non inclinée)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ocr:index' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-upload"></i> Uploader et Analyser
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Aperçu de l'image (optionnel avec JavaScript) -->
+        <div class="card mt-4" id="preview-card" style="display: none;">
+            <div class="card-header">
+                <h6><i class="bi bi-image"></i> Aperçu</h6>
+            </div>
+            <div class="card-body text-center">
+                <img id="image-preview" src="" alt="Aperçu" class="img-fluid" style="max-height: 400px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.querySelector('input[name="image"]').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('image-preview');
+            const previewCard = document.getElementById('preview-card');
+            preview.src = e.target.result;
+            previewCard.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}
+
