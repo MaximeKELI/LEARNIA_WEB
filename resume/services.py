@@ -10,7 +10,54 @@ class ResumeService:
     """Service pour générer des résumés"""
     
     def generate_resume(self, texte, longueur_max=200):
-        """Génère un résumé du texte"""
+        """Génère un résumé du texte avec Gemini AI"""
+        # Essayer d'abord avec Gemini
+        if GeminiService.is_available():
+            resume = self._generate_with_gemini(texte, longueur_max)
+            if resume:
+                return resume
+        
+        # Fallback vers l'ancien système
+        return self._generate_fallback(texte, longueur_max)
+    
+    def _generate_with_gemini(self, texte, longueur_max=200):
+        """Génère un résumé avec Gemini AI"""
+        system_instruction = """Tu es un assistant pédagogique qui génère des résumés de cours pour des élèves togolais.
+        
+Génère des résumés :
+- Clairs et structurés
+- Qui capturent les points essentiels
+- Adaptés au niveau scolaire
+- En français, avec un langage accessible"""
+        
+        prompt = f"""Résume le texte suivant en maximum {longueur_max} mots, en capturant les points essentiels et les concepts clés.
+
+TEXTE :
+{texte[:3000]}  # Limiter la longueur
+
+Génère un résumé concis et pédagogique."""
+        
+        response = GeminiService.generate_text(
+            prompt=prompt,
+            system_instruction=system_instruction,
+            temperature=0.3,  # Température plus basse pour des résumés plus factuels
+            max_tokens=longueur_max * 2  # Approximativement 2 tokens par mot
+        )
+        
+        if response:
+            # Limiter la longueur si nécessaire
+            if len(response) > longueur_max:
+                # Couper à la dernière phrase complète avant la limite
+                words = response[:longueur_max].split()
+                response = ' '.join(words)
+                if not response.endswith(('.', '!', '?')):
+                    response += "..."
+            return response
+        
+        return None
+    
+    def _generate_fallback(self, texte, longueur_max=200):
+        """Génère un résumé avec le système de fallback (ancien système)"""
         # Extraire les phrases
         phrases = re.split(r'[.!?]\s+', texte)
         phrases = [p.strip() for p in phrases if len(p.strip()) > 20]
