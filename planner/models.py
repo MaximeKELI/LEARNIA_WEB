@@ -35,6 +35,7 @@ class RevisionPlanifiee(models.Model):
             ('lecture', 'Lecture'),
             ('qcm', 'QCM'),
             ('flashcard', 'Flashcards'),
+            ('exercices', 'Exercices'),
             ('resume', 'Résumé'),
         ],
         default='lecture'
