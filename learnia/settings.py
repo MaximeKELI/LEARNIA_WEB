@@ -147,5 +147,8 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Gemini AI Configuration
-GEMINI_API_KEY = 'AIzaSyD7heDzGASLXFL3UB_tIl99JpqjUBb37Rg'
+# IMPORTANT: Utilisez une variable d'environnement pour la clé API en production
+# Pour définir: export GEMINI_API_KEY='votre_cle_api'
+import os
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
