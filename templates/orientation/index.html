@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Orientation Scolaire - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-compass"></i> Orientation Scolaire</h2>
+    <a href="{% url 'orientation:questionnaire' %}" class="btn btn-primary">
+        <i class="bi bi-clipboard-check"></i> Passer le Questionnaire
+    </a>
+</div>
+
+<div class="row">
+    <!-- Questionnaires récents -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-file-earmark-text"></i> Mes Questionnaires</h5>
+            </div>
+            <div class="card-body">
+                {% if questionnaires %}
+                <ul class="list-group">
+                    {% for questionnaire in questionnaires %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ questionnaire.filiere_suggeree }}</h6>
+                                <p class="mb-1 text-muted">
+                                    <small>
+                                        <i class="bi bi-calendar"></i> {{ questionnaire.created_at|date:"d/m/Y à H:i" }}
+                                    </small>
+                                </p>
+                                <div class="mt-2">
+                                    <span class="badge bg-info me-1">Scientifique: {{ questionnaire.score_scientifique }}</span>
+                                    <span class="badge bg-success me-1">Littéraire: {{ questionnaire.score_litteraire }}</span>
+                                    <span class="badge bg-warning me-1">Commercial: {{ questionnaire.score_commercial }}</span>
+                                    <span class="badge bg-secondary">Technique: {{ questionnaire.score_technique }}</span>
+                                </div>
+                            </div>
+                            <a href="{% url 'orientation:resultat' questionnaire.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Voir
+                            </a>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">Aucun questionnaire complété. <a href="{% url 'orientation:questionnaire' %}">Passez le questionnaire maintenant</a> !</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Filières disponibles -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-book"></i> Filières Disponibles</h5>
+            </div>
+            <div class="card-body">
+                {% if filieres %}
+                <ul class="list-group">
+                    {% for filiere in filieres %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ filiere.nom }}</h6>
+                                <p class="mb-1 text-muted small">{{ filiere.description|truncatewords:20 }}</p>
+                                <span class="badge bg-secondary">{{ filiere.get_type_filiere_display }}</span>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-3">
+                    <a href="{% url 'orientation:filieres' %}" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-list-ul"></i> Voir toutes les filières
+                    </a>
+                </div>
+                {% else %}
+                <p class="text-muted">Aucune filière disponible.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-clipboard-check fs-1 text-primary"></i>
+                <h5 class="mt-3">Questionnaire</h5>
+                <p class="text-muted">Découvrez votre filière idéale</p>
+                <a href="{% url 'orientation:questionnaire' %}" class="btn btn-primary">
+                    Commencer
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-book fs-1 text-success"></i>
+                <h5 class="mt-3">Filières</h5>
+                <p class="text-muted">Explorez toutes les filières</p>
+                <a href="{% url 'orientation:filieres' %}" class="btn btn-success">
+                    Explorer
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="bi bi-briefcase fs-1 text-info"></i>
+                <h5 class="mt-3">Métiers</h5>
+                <p class="text-muted">Découvrez les métiers</p>
+                <a href="{% url 'orientation:metiers' %}" class="btn btn-info">
+                    Découvrir
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
