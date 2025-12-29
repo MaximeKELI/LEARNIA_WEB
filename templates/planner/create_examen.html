@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Créer un Examen - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-file-earmark-text"></i> Créer un Examen</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Nom de l'examen *</label>
+                        <input type="text" class="form-control" name="nom" required 
+                               placeholder="Ex: Contrôle de Mathématiques">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Matière *</label>
+                        <select class="form-select" name="matiere_id" required>
+                            <option value="">Sélectionner une matière</option>
+                            {% for matiere in matieres %}
+                            <option value="{{ matiere.id }}">{{ matiere.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Date et heure *</label>
+                        <input type="datetime-local" class="form-control" name="date_examen" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Description (optionnel)</label>
+                        <textarea class="form-control" name="description" rows="3" 
+                                  placeholder="Informations supplémentaires sur l'examen..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'planner:index' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

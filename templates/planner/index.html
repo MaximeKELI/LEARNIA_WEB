@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Planificateur de Révision - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-calendar-event"></i> Planificateur de Révision</h2>
+    <div>
+        <a href="{% url 'planner:create_examen' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouvel Examen
+        </a>
+        <a href="{% url 'planner:create_revision' %}" class="btn btn-success">
+            <i class="bi bi-clock-history"></i> Nouvelle Révision
+        </a>
+        <a href="{% url 'planner:generate_plan' %}" class="btn btn-info">
+            <i class="bi bi-magic"></i> Générer un Plan
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Examens à venir -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5><i class="bi bi-file-earmark-text"></i> Examens à Venir</h5>
+            </div>
+            <div class="card-body">
+                {% if examens %}
+                <ul class="list-group">
+                    {% for examen in examens %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ examen.nom }}</h6>
+                                <p class="mb-1 text-muted">
+                                    <i class="bi bi-book"></i> {{ examen.matiere.nom }}
+                                </p>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> {{ examen.date_examen|date:"d/m/Y à H:i" }}
+                                </small>
+                                {% if examen.description %}
+                                <p class="mt-2 mb-0 small">{{ examen.description }}</p>
+                                {% endif %}
+                            </div>
+                            <span class="badge bg-danger">
+                                Dans {{ examen.date_examen|timeuntil }}
+                            </span>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">Aucun examen prévu pour le moment.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Révisions planifiées -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="bi bi-clock-history"></i> Révisions Planifiées</h5>
+            </div>
+            <div class="card-body">
+                {% if revisions %}
+                <ul class="list-group">
+                    {% for revision in revisions %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ revision.chapitre.titre }}</h6>
+                                <p class="mb-1 text-muted">
+                                    <i class="bi bi-book"></i> {{ revision.chapitre.matiere.nom }}
+                                </p>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> {{ revision.date_revision|date:"d/m/Y à H:i" }}
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i> {{ revision.duree_prevue_minutes }} min
+                                    | Type: {{ revision.get_type_revision_display }}
+                                </small>
+                            </div>
+                            <div>
+                                <a href="{% url 'planner:mark_revision_done' revision.id %}" 
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Marquer cette révision comme terminée ?');">
+                                    <i class="bi bi-check"></i> Terminé
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">Aucune révision planifiée.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rappels -->
+{% if rappels %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5><i class="bi bi-bell"></i> Rappels</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for rappel in rappels %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>{{ rappel.titre }}</strong>
+                                <p class="mb-0 text-muted">{{ rappel.message }}</p>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar"></i> {{ rappel.date_rappel|date:"d/m/Y à H:i" }}
+                                </small>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Statistiques -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ examens|length }}</h3>
+                <p class="text-muted mb-0">Examens à venir</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ revisions|length }}</h3>
+                <p class="text-muted mb-0">Révisions planifiées</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ rappels|length }}</h3>
+                <p class="text-muted mb-0">Rappels actifs</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

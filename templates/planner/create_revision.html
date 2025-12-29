@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Planifier une Révision - Learnia{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="bi bi-clock-history"></i> Planifier une Révision</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Chapitre *</label>
+                        <select class="form-select" name="chapitre_id" required>
+                            <option value="">Sélectionner un chapitre</option>
+                            {% for chapitre in chapitres %}
+                            <option value="{{ chapitre.id }}">
+                                {{ chapitre.matiere.nom }} - {{ chapitre.titre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Date et heure *</label>
+                        <input type="datetime-local" class="form-control" name="date_revision" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Durée prévue (minutes)</label>
+                            <input type="number" class="form-control" name="duree_prevue_minutes" 
+                                   value="30" min="5" max="180" step="5">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Type de révision</label>
+                            <select class="form-select" name="type_revision">
+                                <option value="lecture">Lecture</option>
+                                <option value="qcm">QCM</option>
+                                <option value="flashcards">Flashcards</option>
+                                <option value="exercices">Exercices</option>
+                                <option value="resume">Résumé</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Enregistrer
+                    </button>
+                    <a href="{% url 'planner:index' %}" class="btn btn-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
