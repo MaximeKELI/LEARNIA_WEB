@@ -10,10 +10,30 @@
                 <h4>{{ qcm.titre }}</h4>
             </div>
             <div class="card-body">
+                <!-- Zone de résultats (cachée initialement) -->
+                <div id="resultats-zone" style="display: none;">
+                    <div class="alert alert-info mb-4">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-trophy"></i> Résultats du QCM
+                        </h5>
+                        <p class="mb-0" id="score-message"></p>
+                    </div>
+                    <div id="resultats-details"></div>
+                    <div class="mt-4">
+                        <a href="{% url 'qcm:index' %}" class="btn btn-primary">
+                            <i class="bi bi-arrow-left"></i> Retour à la liste
+                        </a>
+                        <button onclick="location.reload()" class="btn btn-secondary">
+                            <i class="bi bi-arrow-clockwise"></i> Recommencer
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Formulaire QCM -->
                 <form id="qcm-form">
                     {% csrf_token %}
                     {% for question in questions %}
-                    <div class="mb-4">
+                    <div class="mb-4 question-block" data-question-id="{{ question.id }}">
                         <h5>Question {{ question.numero }}</h5>
                         <p>{{ question.texte }}</p>
                         <div class="ms-4">
@@ -70,14 +90,97 @@ document.getElementById('qcm-form').addEventListener('submit', function(e) {
         return response.json();
     })
     .then(data => {
-        alert('Score : ' + data.score + '/' + data.total + ' (' + data.pourcentage + '%)');
-        window.location.href = '{% url "qcm:index" %}';
+        // Afficher les résultats
+        afficherResultats(data);
     })
     .catch(error => {
         console.error('Erreur:', error);
         alert('Une erreur est survenue lors de la soumission du QCM. Veuillez réessayer.');
     });
 });
+
+function afficherResultats(data) {
+    // Masquer le formulaire
+    document.getElementById('qcm-form').style.display = 'none';
+    
+    // Afficher la zone de résultats
+    const resultatsZone = document.getElementById('resultats-zone');
+    resultatsZone.style.display = 'block';
+    
+    // Afficher le score
+    const scoreMessage = document.getElementById('score-message');
+    const pourcentage = parseFloat(data.pourcentage);
+    let alertClass = 'alert-success';
+    if (pourcentage < 50) {
+        alertClass = 'alert-danger';
+    } else if (pourcentage < 70) {
+        alertClass = 'alert-warning';
+    }
+    scoreMessage.parentElement.className = `alert ${alertClass} mb-4`;
+    scoreMessage.innerHTML = `
+        <strong>Score : ${data.score}/${data.total} (${data.pourcentage}%)</strong>
+    `;
+    
+    // Afficher les détails des questions
+    const resultatsDetails = document.getElementById('resultats-details');
+    let html = '';
+    
+    data.resultats.forEach((resultat, index) => {
+        const isCorrect = resultat.est_correct;
+        const badgeClass = isCorrect ? 'success' : 'danger';
+        const icon = isCorrect ? 'check-circle-fill' : 'x-circle-fill';
+        
+        html += `
+            <div class="card mb-3 ${isCorrect ? 'border-success' : 'border-danger'}">
+                <div class="card-header bg-${isCorrect ? 'success' : 'danger'} bg-opacity-10">
+                    <h6 class="mb-0">
+                        <i class="bi bi-${icon} text-${badgeClass}"></i>
+                        Question ${index + 1}
+                        <span class="badge bg-${badgeClass} ms-2">
+                            ${isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="fw-bold">${resultat.question_texte}</p>
+                    
+                    ${resultat.choix_selectionne_texte ? `
+                        <div class="mb-2">
+                            <strong>Votre réponse :</strong>
+                            <span class="badge bg-${isCorrect ? 'success' : 'danger'} ms-2">
+                                ${resultat.choix_selectionne_texte}
+                            </span>
+                        </div>
+                    ` : `
+                        <div class="mb-2">
+                            <strong>Votre réponse :</strong>
+                            <span class="badge bg-secondary ms-2">Aucune réponse</span>
+                        </div>
+                    `}
+                    
+                    ${!isCorrect && resultat.choix_correct_texte ? `
+                        <div>
+                            <strong>Bonne réponse :</strong>
+                            <span class="badge bg-success ms-2">
+                                ${resultat.choix_correct_texte}
+                            </span>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    resultatsDetails.innerHTML = html;
+    
+    // Désactiver tous les inputs
+    document.querySelectorAll('#qcm-form input[type="radio"]').forEach(input => {
+        input.disabled = true;
+    });
+    
+    // Scroll vers le haut pour voir les résultats
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 {% endblock %}
 {% endblock %}

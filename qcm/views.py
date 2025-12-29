@@ -96,6 +96,7 @@ def submit_qcm(request, qcm_id):
     
     score = 0
     total = qcm.questions.count()
+    resultats_questions = []  # Pour stocker les détails de chaque question
     
     # Vérifier les réponses
     for key, choix_id in reponses.items():
@@ -109,12 +110,40 @@ def submit_qcm(request, qcm_id):
                 question_id = int(key)
             
             question = Question.objects.get(id=question_id, qcm=qcm)
-            choix = Choix.objects.get(id=int(choix_id), question=question)
-            if choix.est_correct:
+            choix_selectionne = Choix.objects.get(id=int(choix_id), question=question)
+            choix_correct = question.choix.filter(est_correct=True).first()
+            
+            est_correct = choix_selectionne.est_correct
+            if est_correct:
                 score += 1
+            
+            resultats_questions.append({
+                'question_id': question_id,
+                'question_texte': question.texte,
+                'choix_selectionne_id': choix_selectionne.id,
+                'choix_selectionne_texte': choix_selectionne.texte,
+                'choix_correct_id': choix_correct.id if choix_correct else None,
+                'choix_correct_texte': choix_correct.texte if choix_correct else '',
+                'est_correct': est_correct
+            })
         except (ValueError, Question.DoesNotExist, Choix.DoesNotExist) as e:
             # Ignorer les réponses invalides
             continue
+    
+    # Ajouter les questions sans réponse
+    questions_avec_reponse = {r['question_id'] for r in resultats_questions}
+    for question in qcm.questions.all():
+        if question.id not in questions_avec_reponse:
+            choix_correct = question.choix.filter(est_correct=True).first()
+            resultats_questions.append({
+                'question_id': question.id,
+                'question_texte': question.texte,
+                'choix_selectionne_id': None,
+                'choix_selectionne_texte': None,
+                'choix_correct_id': choix_correct.id if choix_correct else None,
+                'choix_correct_texte': choix_correct.texte if choix_correct else '',
+                'est_correct': False
+            })
     
     pourcentage = (score / total * 100) if total > 0 else 0
     
@@ -138,6 +167,7 @@ def submit_qcm(request, qcm_id):
         'score': score,
         'total': total,
         'pourcentage': round(pourcentage, 2),
-        'message': f"Score : {score}/{total} ({round(pourcentage, 2)}%)"
+        'message': f"Score : {score}/{total} ({round(pourcentage, 2)}%)",
+        'resultats': resultats_questions
     })
 
