@@ -36,6 +36,7 @@ if __name__ == "__main__":
         'frontend_tests',
         'database_tests',
         'integration_tests',
+        'integrity_tests',
     ]
     
     all_tests = apps_to_test + specific_tests
