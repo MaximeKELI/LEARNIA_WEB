@@ -87,7 +87,8 @@ def fiche_download(request, fiche_id):
     buffer = FichePDFGenerator.generate_fiche(fiche)
     
     response = HttpResponse(buffer.read(), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="fiche_{fiche.titre.replace(' ', '_')}_{datetime.now().strftime("%Y%m%d")}.pdf"'
+    filename = f"fiche_{fiche.titre.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d')}.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
 
