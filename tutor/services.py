@@ -1,7 +1,8 @@
 """
-Service de simulation IA pour le tuteur intelligent
-Mode hors ligne avec réponses pré-générées
+Service IA pour le tuteur intelligent
+Utilise Gemini AI avec fallback vers réponses pré-générées
 """
+from learnia.gemini_service import GeminiService
 
 
 class TuteurService:
@@ -17,7 +18,54 @@ class TuteurService:
     }
     
     def get_response(self, question, chapitre=None, user=None):
-        """Génère une réponse adaptée à la question"""
+        """Génère une réponse adaptée à la question avec Gemini AI"""
+        # Essayer d'abord avec Gemini
+        if GeminiService.is_available():
+            response = self._get_gemini_response(question, chapitre, user)
+            if response:
+                return response
+        
+        # Fallback vers l'ancien système si Gemini n'est pas disponible
+        return self._get_fallback_response(question, chapitre, user)
+    
+    def _get_gemini_response(self, question, chapitre=None, user=None):
+        """Génère une réponse avec Gemini AI"""
+        # Construire le prompt système
+        system_instruction = """Tu es un tuteur intelligent et bienveillant pour des élèves togolais du primaire à la terminale.
+        
+Ton rôle est de :
+- Expliquer les concepts de manière simple et adaptée au niveau de l'élève
+- Utiliser des exemples concrets et pertinents pour le contexte togolais
+- Encourager l'élève et le motiver
+- Répondre de manière pédagogique et structurée
+- Utiliser un langage clair et accessible
+
+Réponds toujours en français, de manière amicale et encourageante."""
+        
+        # Construire le prompt utilisateur
+        prompt = f"Question de l'élève : {question}\n\n"
+        
+        if chapitre:
+            prompt += f"Contexte : L'élève étudie le chapitre '{chapitre.titre}' de la matière '{chapitre.matiere.nom if chapitre.matiere else 'non spécifiée'}'.\n\n"
+        
+        if user:
+            niveau = getattr(user, 'niveau_etude', None)
+            if niveau:
+                prompt += f"Niveau de l'élève : {niveau}\n\n"
+        
+        prompt += "Réponds à la question de manière pédagogique, claire et adaptée au niveau de l'élève."
+        
+        # Générer la réponse avec Gemini
+        response = GeminiService.generate_text(
+            prompt=prompt,
+            system_instruction=system_instruction,
+            temperature=0.7
+        )
+        
+        return response
+    
+    def _get_fallback_response(self, question, chapitre=None, user=None):
+        """Génère une réponse avec le système de fallback (ancien système)"""
         question_lower = question.lower().strip()
         
         # Recherche de mots-clés

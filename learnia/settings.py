@@ -146,3 +146,6 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
+# Gemini AI Configuration
+GEMINI_API_KEY = 'AIzaSyD7heDzGASLXFL3UB_tIl99JpqjUBb37Rg'
+
