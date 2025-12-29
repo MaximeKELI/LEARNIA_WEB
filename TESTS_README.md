@@ -42,11 +42,25 @@ Tests pour vérifier que les fonctionnalités travaillent ensemble :
 - **Workflows complets** : Sessions d'étude complètes
 - **Intégrations calendrier** : Association avec examens et matières
 
+### Tests d'Intégrité (`integrity_tests.py`) ⭐ NOUVEAU
+Tests pour éviter les erreurs courantes (templates manquants, URLs invalides, etc.) :
+- **Templates** : Vérification que tous les templates existent
+- **URLs** : Vérification que toutes les URLs sont valides
+- **Vues** : Vérification de l'accessibilité des pages
+- **Liens** : Vérification des liens dans les templates
+- **Modèles** : Vérification des relations entre modèles
+- **Données** : Vérification de l'intégrité des données
+
 ## 🚀 Exécution des Tests
 
 ### Tous les tests
 ```bash
 python manage.py test
+```
+
+### Vérification rapide d'intégrité ⭐ NOUVEAU
+```bash
+python check_integrity.py
 ```
 
 ### Tests d'une application spécifique
@@ -59,6 +73,14 @@ python manage.py test notes
 python manage.py test calendar_app
 python manage.py test fiches
 python manage.py test export
+```
+
+### Tests d'intégrité spécifiques ⭐ NOUVEAU
+```bash
+python manage.py test integrity_tests
+python manage.py test integrity_tests.TemplateIntegrityTest
+python manage.py test integrity_tests.URLIntegrityTest
+python manage.py test integrity_tests.ViewAccessibilityTest
 ```
 
 ### Tests frontend
