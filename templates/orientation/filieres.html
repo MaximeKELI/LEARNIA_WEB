@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Filières - Learnia{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-book"></i> Filières Scolaires</h2>
+    <a href="{% url 'orientation:index' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Retour
+    </a>
+</div>
+
+{% if filieres %}
+<div class="row">
+    {% for filiere in filieres %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-book-half"></i> {{ filiere.nom }}
+                    <span class="badge bg-light text-dark ms-2">{{ filiere.get_type_filiere_display }}</span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <p>{{ filiere.description }}</p>
+                
+                {% if filiere.matieres_principales %}
+                <div class="mb-3">
+                    <strong>Matières principales :</strong>
+                    <div class="mt-2">
+                        {% for matiere in filiere.matieres_principales %}
+                        <span class="badge bg-info me-1">{{ matiere }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if filiere.metiers %}
+                <div>
+                    <strong>Métiers possibles :</strong>
+                    <ul class="list-unstyled mt-2">
+                        {% for metier in filiere.metiers %}
+                        <li><i class="bi bi-check-circle text-success"></i> {{ metier }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Aucune filière disponible pour le moment.
+</div>
+{% endif %}
+{% endblock %}
+
