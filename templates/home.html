@@ -1,9 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load posts_tags %}
 
 {% block title %}Accueil - Learnia{% endblock %}
 
 {% block content %}
+<!-- Posts prioritaires -->
+{% if user.is_authenticated %}
+{% get_priority_posts 3 as priority_posts %}
+{% if priority_posts %}
+<div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+    <h5 class="alert-heading"><i class="bi bi-star-fill"></i> Annonces importantes</h5>
+    {% for post in priority_posts %}
+    <p class="mb-1">
+        <strong>{{ post.titre }}</strong> - 
+        <a href="{% url 'posts:detail' post.id %}" class="alert-link">Lire la suite</a>
+    </p>
+    {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+{% endif %}
+
 <div class="jumbotron bg-primary text-white rounded p-5 mb-4 text-center">
     <img src="{% static 'images/learnia-logo.png' %}" alt="Learnia Logo" height="120" class="mb-4 learnia-logo-home" style="max-height: 120px;">
     <h1 class="display-4">Bienvenue sur Learnia</h1>

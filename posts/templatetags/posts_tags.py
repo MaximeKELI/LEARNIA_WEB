@@ -5,20 +5,20 @@ from posts.models import Post
 register = template.Library()
 
 
-@register.inclusion_tag('posts/priority_posts.html', takes_context=True)
-def get_priority_posts(context, limit=5):
+@register.simple_tag
+def get_priority_posts(limit=5):
     """Récupère les posts prioritaires actifs"""
+    now = timezone.now()
     posts = Post.objects.filter(
         publique=True,
         prioritaire=True
     ).filter(
-        date_expiration__gte=timezone.now()
-    ) | Post.objects.filter(
-        publique=True,
-        prioritaire=True,
-        date_expiration__isnull=True
-    )
+        models.Q(date_expiration__gte=now) | models.Q(date_expiration__isnull=True)
+    ).order_by('-date_publication')[:limit]
     
-    posts = posts.order_by('-date_publication')[:limit]
-    return {'posts': posts}
+    return posts
+
+
+register = template.Library()
+from django.db import models
 
