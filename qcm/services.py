@@ -1,16 +1,114 @@
 """
 Service de génération de QCM à partir d'un texte
-Mode hors ligne avec génération locale
+Utilise Gemini AI avec fallback vers génération locale
 """
 import re
 import random
+import json
+from learnia.gemini_service import GeminiService
 
 
 class QCMGenerator:
     """Générateur de QCM à partir d'un texte"""
     
     def generate_questions(self, texte, nombre_questions=5):
-        """Génère des questions à partir d'un texte"""
+        """Génère des questions à partir d'un texte avec Gemini AI"""
+        # Essayer d'abord avec Gemini
+        if GeminiService.is_available():
+            questions = self._generate_with_gemini(texte, nombre_questions)
+            if questions:
+                return questions
+        
+        # Fallback vers l'ancien système
+        return self._generate_fallback(texte, nombre_questions)
+    
+    def _generate_with_gemini(self, texte, nombre_questions=5):
+        """Génère des questions avec Gemini AI"""
+        system_instruction = """Tu es un générateur de questions pédagogiques pour des élèves togolais.
+        
+Génère des questions de qualité adaptées au niveau scolaire, avec :
+- Des questions claires et précises
+- Des choix de réponses variés et pertinents
+- Une seule bonne réponse par question
+- Des distracteurs réalistes (mauvaises réponses plausibles)
+
+Format de réponse : JSON avec une liste de questions, chaque question ayant :
+- "texte" : le texte de la question
+- "choix" : liste de choix, chaque choix ayant "texte" et "correct" (true/false)"""
+        
+        prompt = f"""À partir du texte suivant, génère exactement {nombre_questions} questions à choix multiple (QCM) de qualité pédagogique.
+
+TEXTE :
+{texte[:2000]}  # Limiter la longueur pour éviter les tokens excessifs
+
+Génère les questions en format JSON. Chaque question doit avoir :
+- "numero" : numéro de la question (1, 2, 3...)
+- "texte" : le texte de la question
+- "choix" : liste de 4 choix, avec exactement UN choix ayant "correct": true
+
+Réponds UNIQUEMENT en JSON valide, sans texte supplémentaire."""
+        
+        response = GeminiService.generate_structured_response(
+            prompt=prompt,
+            system_instruction=system_instruction,
+            format_type="json"
+        )
+        
+        if not response:
+            return None
+        
+        try:
+            # Nettoyer la réponse (enlever markdown si présent)
+            response_clean = response.strip()
+            if response_clean.startswith("```json"):
+                response_clean = response_clean[7:]
+            if response_clean.startswith("```"):
+                response_clean = response_clean[3:]
+            if response_clean.endswith("```"):
+                response_clean = response_clean[:-3]
+            response_clean = response_clean.strip()
+            
+            # Parser le JSON
+            data = json.loads(response_clean)
+            
+            # Vérifier le format
+            if isinstance(data, dict) and 'questions' in data:
+                questions = data['questions']
+            elif isinstance(data, list):
+                questions = data
+            else:
+                return None
+            
+            # Valider et formater les questions
+            formatted_questions = []
+            for i, q in enumerate(questions[:nombre_questions], 1):
+                if 'texte' in q and 'choix' in q:
+                    formatted_q = {
+                        'numero': q.get('numero', i),
+                        'texte': q['texte'],
+                        'choix': []
+                    }
+                    
+                    # Formater les choix
+                    for choix in q['choix']:
+                        if isinstance(choix, dict) and 'texte' in choix:
+                            formatted_q['choix'].append({
+                                'texte': choix['texte'],
+                                'correct': choix.get('correct', False)
+                            })
+                    
+                    # Vérifier qu'il y a au moins 2 choix et une bonne réponse
+                    if len(formatted_q['choix']) >= 2 and any(c['correct'] for c in formatted_q['choix']):
+                        formatted_questions.append(formatted_q)
+            
+            return formatted_questions if formatted_questions else None
+            
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
+            # En cas d'erreur de parsing, retourner None pour utiliser le fallback
+            return None
+    
+    def _generate_fallback(self, texte, nombre_questions=5):
+        """Génère des questions avec le système de fallback (ancien système)"""
         questions = []
         
         # Extraire les phrases importantes

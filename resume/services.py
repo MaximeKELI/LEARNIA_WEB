@@ -1,8 +1,9 @@
 """
 Service de génération de résumé automatique
-Mode hors ligne avec traitement local
+Utilise Gemini AI avec fallback vers traitement local
 """
 import re
+from learnia.gemini_service import GeminiService
 
 
 class ResumeService:
