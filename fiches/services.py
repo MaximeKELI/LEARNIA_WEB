@@ -15,6 +15,37 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 class FichePDFGenerator:
     """Générateur de fiches PDF"""
     
+    # Mapping des polices vers les polices standard de ReportLab
+    FONT_MAPPING = {
+        'Arial': 'Helvetica',
+        'Helvetica': 'Helvetica',
+        'Times': 'Times-Roman',
+        'Times New Roman': 'Times-Roman',
+        'Courier': 'Courier',
+        'Courier New': 'Courier',
+    }
+    
+    @staticmethod
+    def _get_reportlab_font(font_name):
+        """Convertit un nom de police en police ReportLab compatible"""
+        if not font_name:
+            return 'Helvetica'
+        
+        # Normaliser le nom de police
+        font_name = font_name.strip()
+        
+        # Vérifier le mapping
+        if font_name in FichePDFGenerator.FONT_MAPPING:
+            return FichePDFGenerator.FONT_MAPPING[font_name]
+        
+        # Polices standard de ReportLab
+        standard_fonts = ['Helvetica', 'Times-Roman', 'Courier', 'Symbol']
+        if font_name in standard_fonts:
+            return font_name
+        
+        # Par défaut, utiliser Helvetica (sans-serif, similaire à Arial)
+        return 'Helvetica'
+    
     @staticmethod
     def generate_fiche(fiche):
         """Génère un PDF pour une fiche"""
@@ -32,6 +63,10 @@ class FichePDFGenerator:
         
         # Styles
         styles = getSampleStyleSheet()
+        
+        # Obtenir la police compatible avec ReportLab
+        reportlab_font = FichePDFGenerator._get_reportlab_font(fiche.police)
+        
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
@@ -39,7 +74,7 @@ class FichePDFGenerator:
             textColor=colors.HexColor(fiche.couleur_titre),
             spaceAfter=30,
             alignment=TA_CENTER,
-            fontName=fiche.police
+            fontName=reportlab_font
         )
         
         heading_style = ParagraphStyle(
@@ -47,7 +82,7 @@ class FichePDFGenerator:
             parent=styles['Heading2'],
             fontSize=16,
             spaceAfter=12,
-            fontName=fiche.police
+            fontName=reportlab_font
         )
         
         body_style = ParagraphStyle(
@@ -55,7 +90,7 @@ class FichePDFGenerator:
             parent=styles['BodyText'],
             fontSize=11,
             spaceAfter=12,
-            fontName=fiche.police,
+            fontName=reportlab_font,
             alignment=TA_LEFT
         )
         
@@ -141,7 +176,9 @@ class FichePDFGenerator:
             user=user,
             titre=titre,
             chapitre=chapitre,
-            contenu=contenu
+            contenu=contenu,
+            police='Helvetica',  # Police par défaut compatible ReportLab
+            couleur_titre='#000000'  # Couleur par défaut
         )
         
         return FichePDFGenerator.generate_fiche(fiche)
@@ -163,7 +200,9 @@ class FichePDFGenerator:
             user=user,
             titre=titre,
             chapitre=deck.chapitre,
-            contenu=contenu
+            contenu=contenu,
+            police='Helvetica',  # Police par défaut compatible ReportLab
+            couleur_titre='#000000'  # Couleur par défaut
         )
         
         return FichePDFGenerator.generate_fiche(fiche)

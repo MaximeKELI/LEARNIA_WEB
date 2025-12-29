@@ -24,7 +24,7 @@ def fiche_create(request):
         contenu = request.POST.get('contenu')
         chapitre_id = request.POST.get('chapitre_id')
         couleur_titre = request.POST.get('couleur_titre', '#007bff')
-        police = request.POST.get('police', 'Arial')
+        police = request.POST.get('police', 'Helvetica')
         
         chapitre = Chapitre.objects.get(id=chapitre_id) if chapitre_id else None
         

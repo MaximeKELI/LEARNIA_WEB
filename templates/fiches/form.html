@@ -58,9 +58,10 @@ Contenu de la section...
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Police</label>
                             <select class="form-select" name="police">
-                                <option value="Arial" {% if fiche and fiche.police == 'Arial' %}selected{% endif %}>Arial</option>
+                                <option value="Helvetica" {% if not fiche or fiche.police == 'Helvetica' or fiche.police == 'Arial' %}selected{% endif %}>Helvetica (recommandé)</option>
+                                <option value="Arial" {% if fiche and fiche.police == 'Arial' %}selected{% endif %}>Arial (converti en Helvetica)</option>
                                 <option value="Times-Roman" {% if fiche and fiche.police == 'Times-Roman' %}selected{% endif %}>Times New Roman</option>
-                                <option value="Helvetica" {% if fiche and fiche.police == 'Helvetica' %}selected{% endif %}>Helvetica</option>
+                                <option value="Courier" {% if fiche and fiche.police == 'Courier' %}selected{% endif %}>Courier</option>
                             </select>
                         </div>
                     </div>
